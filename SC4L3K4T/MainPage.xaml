@@ -5,37 +5,51 @@
              xmlns:components="clr-namespace:SC4L3K4T.Components"
              x:Class="SC4L3K4T.MainPage">
 
-    <VerticalStackLayout
+    <ScrollView>
+        
+        <VerticalStackLayout
         Padding="30"
         Spacing="20">
 
-        <Label
+            <Label
             Text="SC4L3K4T"
             FontSize="32"
             HorizontalOptions="Center" />
 
-        <Label
+            <Label
             x:Name="BluetoothStatusLabel"
             Text="Bluetooth: Desconectado"
             FontSize="18"
             HorizontalOptions="Center" />
 
-        <ActivityIndicator
+            <ActivityIndicator
             x:Name="ScanActivityIndicator"
             IsRunning="False"
             IsVisible="False" />
 
-        <Button x:Name="ScanButton" 
+            <Button x:Name="ScanButton" 
             BackgroundColor="White"
-            Text="Escanrar BLE"
+            Text="Escanear BLE"
             Clicked="OnScanClicked"/>
 
-        <BlazorWebView IsVisible="False" x:Name="blazorWebView" HostPage="wwwroot/index.html">
-            <BlazorWebView.RootComponents>
-                <RootComponent Selector="#app" ComponentType="{x:Type components:Routes}" />
-            </BlazorWebView.RootComponents>
-        </BlazorWebView>
-    </VerticalStackLayout>
-    
+            <Label
+                Text="Dispositivos encontrados"
+                FontSize="22"
+                FontAttributes="Bold" />
+
+            <VerticalStackLayout
+                x:Name="DevicesLayout"
+                Spacing="10" />
+
+            <BlazorWebView IsVisible="False" x:Name="blazorWebView" HostPage="wwwroot/index.html">
+                <BlazorWebView.RootComponents>
+                    <RootComponent Selector="#app" ComponentType="{x:Type components:Routes}" />
+                </BlazorWebView.RootComponents>
+            </BlazorWebView>
+            
+        </VerticalStackLayout>
+        
+    </ScrollView>
+
 
 </ContentPage>

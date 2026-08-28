@@ -1,5 +1,7 @@
 ﻿using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
+
 
 #if ANDROID
 using Android;
@@ -52,23 +54,11 @@ namespace SC4L3K4T
             ScanActivityIndicator.IsRunning = true;
             BluetoothStatusLabel.Text = "Bluetooth: Escaneando...";
 
-            var devices = new List<string>();
+            DevicesLayout.Clear();
 
-            adapter.DeviceDiscovered += (s, args) =>
-            {
-                var device = args.Device;
+            var devices = new Dictionary<string, IDevice>();
 
-                var name = string.IsNullOrWhiteSpace(device.Name)
-                    ? "Sin nombre"
-                    : device.Name;
-
-                var item = $"{name}\n{device.Id}";
-
-                if (!devices.Contains(item))
-                {
-                    devices.Add(item);
-                }
-            };
+            adapter.DeviceDiscovered += OnDeviceDiscovered;
 
             try
             {
@@ -76,20 +66,72 @@ namespace SC4L3K4T
             }
             finally
             {
+                adapter.DeviceDiscovered -= OnDeviceDiscovered;
+
                 ScanActivityIndicator.IsRunning = false;
                 ScanActivityIndicator.IsVisible = false;
+
                 ScanButton.IsEnabled = true;
-                BluetoothStatusLabel.Text = "Bluetooth: Listo";
+
+                BluetoothStatusLabel.Text = $"Bluetooth: Listo ({devices.Count} dispositivos)";
             }
 
-            var result = devices.Count == 0
-                ? "No se encontraron dispositivos BLE."
-                : string.Join("\n\n", devices);
+            async void OnDeviceDiscovered(object? sender, DeviceEventArgs args)
+            {
+                var device = args.Device;
 
-            await DisplayAlertAsync(
-                "Dispositivos encontrados",
-                result,
-                "OK");
+                if (devices.ContainsKey(device.Id.ToString()))
+                    return;
+
+                devices.Add(device.Id.ToString(), device);
+
+                await MainThread.InvokeOnMainThreadAsync(() =>
+                {
+                    var name = string.IsNullOrWhiteSpace(device.Name)
+                        ? "Sin nombre"
+                        : device.Name;
+
+                    var nameLabel = new Label
+                    {
+                        Text = name,
+                        FontSize = 18,
+                        FontAttributes = FontAttributes.Bold
+                    };
+
+                    var idLabel = new Label
+                    {
+                        Text = device.Id.ToString(),
+                        FontSize = 12
+                    };
+
+                    var connectButton = new Button
+                    {
+                        Text = "Conectar",
+                        BackgroundColor=Colors.White
+                    };
+
+                    connectButton.Clicked += async (_, _) =>
+                    {
+                        await DisplayAlertAsync(
+                            "Dispositivo seleccionado",
+                            $"{name}\n{device.Id}",
+                            "OK");
+                    };
+
+                    var deviceLayout = new VerticalStackLayout
+                    {
+                        Padding = 15,
+                        Spacing = 5,
+                        BackgroundColor=Colors.DarkSlateGray
+                    };
+
+                    deviceLayout.Children.Add(nameLabel);
+                    deviceLayout.Children.Add(idLabel);
+                    deviceLayout.Children.Add(connectButton);
+
+                    DevicesLayout.Children.Add(deviceLayout);
+                });
+            }
         }
     }
 }
