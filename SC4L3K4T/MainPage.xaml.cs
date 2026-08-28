@@ -12,6 +12,7 @@ namespace SC4L3K4T
 {
     public partial class MainPage : ContentPage
     {
+        private IDevice? _connectedDevice;
         public MainPage()
         {
             InitializeComponent();
@@ -83,6 +84,11 @@ namespace SC4L3K4T
                 if (devices.ContainsKey(device.Id.ToString()))
                     return;
 
+                if (string.IsNullOrWhiteSpace(device.Name)) //quitar esto al hacer pruebas con el UUID
+                {
+                    return;
+                }
+
                 devices.Add(device.Id.ToString(), device);
 
                 await MainThread.InvokeOnMainThreadAsync(() =>
@@ -112,10 +118,30 @@ namespace SC4L3K4T
 
                     connectButton.Clicked += async (_, _) =>
                     {
-                        await DisplayAlertAsync(
-                            "Dispositivo seleccionado",
-                            $"{name}\n{device.Id}",
-                            "OK");
+                        try
+                        {
+                            BluetoothStatusLabel.Text = $"Conectando a {name}...";
+
+                            await adapter.ConnectToDeviceAsync(device);
+
+                            _connectedDevice = device;
+
+                            BluetoothStatusLabel.Text = $"Conectado: {name}";
+
+                            await DisplayAlertAsync(
+                                "Bluetooth",
+                                $"Conectado correctamente a:\n{name}",
+                                "OK");
+                        }
+                        catch (Exception ex)
+                        {
+                            BluetoothStatusLabel.Text = "Bluetooth: Error de conexión";
+
+                            await DisplayAlertAsync(
+                                "Error",
+                                $"No se pudo conectar:\n{ex.Message}",
+                                "OK");
+                        }
                     };
 
                     var deviceLayout = new VerticalStackLayout
