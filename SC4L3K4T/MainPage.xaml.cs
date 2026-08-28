@@ -178,6 +178,15 @@ namespace SC4L3K4T
                                 "BLE Read",
                                 $"Datos recibidos:\n{text}",
                                 "OK");
+
+                            var message = System.Text.Encoding.UTF8.GetBytes("HELLOWORLD");
+
+                            var writeResult = await characteristic.WriteAsync(message);
+
+                            await DisplayAlertAsync(
+                                "BLE Write",
+                                $"Resultado: {writeResult}",
+                                "OK");
                         }
                         catch (Exception ex)
                         {
