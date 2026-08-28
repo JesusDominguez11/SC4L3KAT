@@ -2,6 +2,8 @@
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE.Abstractions;
+using System.Text;
+
 
 
 
@@ -15,6 +17,8 @@ namespace SC4L3K4T
     public partial class MainPage : ContentPage
     {
         private IDevice? _connectedDevice;
+        private static readonly Guid ScaleCarServiceUuid = Guid.Parse("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
+        private static readonly Guid TestCharacteristicUuid = Guid.Parse("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
         public MainPage()
         {
             InitializeComponent();
@@ -139,6 +143,40 @@ namespace SC4L3K4T
                             await DisplayAlertAsync(
                                 "Bluetooth",
                                 $"Conectado correctamente a:\n{name}",
+                                "OK");
+
+                            var service = await device.GetServiceAsync(ScaleCarServiceUuid);
+
+                            if (service == null)
+                            {
+                                await DisplayAlertAsync(
+                                    "BLE",
+                                    "No se encontró el servicio de ScaleCar.",
+                                    "OK");
+
+                                return;
+                            }
+
+                            var characteristic =
+                                await service.GetCharacteristicAsync(TestCharacteristicUuid);
+
+                            if (characteristic == null)
+                            {
+                                await DisplayAlertAsync(
+                                    "BLE",
+                                    "No se encontró la característica de prueba.",
+                                    "OK");
+
+                                return;
+                            }
+
+                            var (data, resultCode) = await characteristic.ReadAsync();
+
+                            var text = System.Text.Encoding.UTF8.GetString(data);
+
+                            await DisplayAlertAsync(
+                                "BLE Read",
+                                $"Datos recibidos:\n{text}",
                                 "OK");
                         }
                         catch (Exception ex)
