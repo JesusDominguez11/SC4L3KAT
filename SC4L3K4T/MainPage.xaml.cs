@@ -1,10 +1,5 @@
-﻿using Plugin.BLE;
-using Plugin.BLE.Abstractions.Contracts;
-using Plugin.BLE.Abstractions.EventArgs;
-using Plugin.BLE.Abstractions;
-using System.Text;
-
-
+﻿using Plugin.BLE.Abstractions.Contracts;
+using SC4L3K4T.Bluetooth;
 
 
 #if ANDROID
@@ -17,11 +12,14 @@ namespace SC4L3K4T
     public partial class MainPage : ContentPage
     {
         private IDevice? _connectedDevice;
+        private readonly IBluetoothService _bluetoothService;
         private static readonly Guid ScaleCarServiceUuid = Guid.Parse("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
         private static readonly Guid TestCharacteristicUuid = Guid.Parse("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
         public MainPage()
         {
             InitializeComponent();
+
+            _bluetoothService = new BluetoothService();
         }
 
         private async void OnScanClicked(object sender, EventArgs e)
@@ -43,180 +41,92 @@ namespace SC4L3K4T
     }
 #endif
 
-            var bluetooth = CrossBluetoothLE.Current;
-            var adapter = CrossBluetoothLE.Current.Adapter;
-
-            if (bluetooth.State != BluetoothState.On)
-            {
-                await DisplayAlertAsync(
-                    "Bluetooth",
-                    "El Bluetooth está apagado.",
-                    "OK");
-
-                return;
-            }
-
             ScanButton.IsEnabled = false;
             ScanActivityIndicator.IsVisible = true;
             ScanActivityIndicator.IsRunning = true;
+
             BluetoothStatusLabel.Text = "Bluetooth: Escaneando...";
 
             DevicesLayout.Clear();
 
-            var devices = new Dictionary<string, IDevice>();
-
-            adapter.DeviceDiscovered += OnDeviceDiscovered;
-
             try
             {
-                await adapter.StartScanningForDevicesAsync();
+                var devices = await _bluetoothService.ScanAsync();
+
+                foreach (var device in devices)
+                {
+                    await AddDeviceToListAsync(device);
+                }
+
+                BluetoothStatusLabel.Text =
+                    $"Bluetooth: Listo ({devices.Count} dispositivos)";
+            }
+            catch (Exception ex)
+            {
+                BluetoothStatusLabel.Text = "Bluetooth: Error";
+
+                await DisplayAlertAsync(
+                    "Bluetooth",
+                    ex.Message,
+                    "OK");
             }
             finally
             {
-                adapter.DeviceDiscovered -= OnDeviceDiscovered;
-
                 ScanActivityIndicator.IsRunning = false;
                 ScanActivityIndicator.IsVisible = false;
 
                 ScanButton.IsEnabled = true;
+            }            
+        }
 
-                BluetoothStatusLabel.Text = $"Bluetooth: Listo ({devices.Count} dispositivos)";
-            }
-
-            async void OnDeviceDiscovered(object? sender, DeviceEventArgs args)
+        private async Task AddDeviceToListAsync(IDevice device)
+        {
+            await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                var device = args.Device;
+                var name = string.IsNullOrWhiteSpace(device.Name)
+                    ? "Sin nombre"
+                    : device.Name;
 
-                if (devices.ContainsKey(device.Id.ToString()))
-                    return;
-
-                if (string.IsNullOrWhiteSpace(device.Name)) //quitar esto al hacer pruebas con el UUID
+                var nameLabel = new Label
                 {
-                    return;
-                }
+                    Text = name,
+                    FontSize = 18,
+                    FontAttributes = FontAttributes.Bold
+                };
 
-                devices.Add(device.Id.ToString(), device);
-
-                await MainThread.InvokeOnMainThreadAsync(() =>
+                var idLabel = new Label
                 {
-                    var name = string.IsNullOrWhiteSpace(device.Name)
-                        ? "Sin nombre"
-                        : device.Name;
+                    Text = device.Id.ToString(),
+                    FontSize = 12
+                };
 
-                    var nameLabel = new Label
-                    {
-                        Text = name,
-                        FontSize = 18,
-                        FontAttributes = FontAttributes.Bold
-                    };
+                var connectButton = new Button
+                {
+                    Text = "Conectar",
+                    BackgroundColor = Colors.White
+                };
 
-                    var idLabel = new Label
-                    {
-                        Text = device.Id.ToString(),
-                        FontSize = 12
-                    };
+                connectButton.Clicked += async (_, _) =>
+                {
+                    await DisplayAlertAsync(
+                        "Dispositivo seleccionado",
+                        $"{name}\n{device.Id}",
+                        "OK");
+                };
 
-                    var connectButton = new Button
-                    {
-                        Text = "Conectar",
-                        BackgroundColor=Colors.White
-                    };
+                var deviceLayout = new VerticalStackLayout
+                {
+                    Padding = 15,
+                    Spacing = 5,
+                    BackgroundColor = Colors.DarkSlateGray
+                };
 
-                    connectButton.Clicked += async (_, _) =>
-                    {
-                        try
-                        {
-                            ScanButton.IsEnabled = false;
+                deviceLayout.Children.Add(nameLabel);
+                deviceLayout.Children.Add(idLabel);
+                deviceLayout.Children.Add(connectButton);
 
-                            BluetoothStatusLabel.Text = $"Conectando a {name}...";
-
-                            await adapter.ConnectToDeviceAsync(
-                                device,
-                                new ConnectParameters(
-                                    autoConnect: false,
-                                    forceBleTransport: true));
-
-                            _connectedDevice = device;
-
-                            BluetoothStatusLabel.Text = $"Conectado: {name}";
-
-                            await DisplayAlertAsync(
-                                "Bluetooth",
-                                $"Conectado correctamente a:\n{name}",
-                                "OK");
-
-                            var service = await device.GetServiceAsync(ScaleCarServiceUuid);
-
-                            if (service == null)
-                            {
-                                await DisplayAlertAsync(
-                                    "BLE",
-                                    "No se encontró el servicio de ScaleCar.",
-                                    "OK");
-
-                                return;
-                            }
-
-                            var characteristic =
-                                await service.GetCharacteristicAsync(TestCharacteristicUuid);
-
-                            if (characteristic == null)
-                            {
-                                await DisplayAlertAsync(
-                                    "BLE",
-                                    "No se encontró la característica de prueba.",
-                                    "OK");
-
-                                return;
-                            }
-
-                            var (data, resultCode) = await characteristic.ReadAsync();
-
-                            var text = System.Text.Encoding.UTF8.GetString(data);
-
-                            await DisplayAlertAsync(
-                                "BLE Read",
-                                $"Datos recibidos:\n{text}",
-                                "OK");
-
-                            var message = System.Text.Encoding.UTF8.GetBytes("HELLOWORLD");
-
-                            var writeResult = await characteristic.WriteAsync(message);
-
-                            await DisplayAlertAsync(
-                                "BLE Write",
-                                $"Resultado: {writeResult}",
-                                "OK");
-                        }
-                        catch (Exception ex)
-                        {
-                            BluetoothStatusLabel.Text = "Bluetooth: Error de conexión";
-
-                            await DisplayAlertAsync(
-                                "Error",
-                                $"{ex.GetType().Name}\n\n{ex.Message}",
-                                "OK");
-                        }
-                        finally
-                        {
-                            ScanButton.IsEnabled = true;
-                        }
-                    };
-
-                    var deviceLayout = new VerticalStackLayout
-                    {
-                        Padding = 15,
-                        Spacing = 5,
-                        BackgroundColor=Colors.DarkSlateGray
-                    };
-
-                    deviceLayout.Children.Add(nameLabel);
-                    deviceLayout.Children.Add(idLabel);
-                    deviceLayout.Children.Add(connectButton);
-
-                    DevicesLayout.Children.Add(deviceLayout);
-                });
-            }
+                DevicesLayout.Children.Add(deviceLayout);
+            });
         }
     }
 }
