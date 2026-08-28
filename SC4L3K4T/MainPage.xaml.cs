@@ -1,5 +1,7 @@
 ﻿using Plugin.BLE.Abstractions.Contracts;
 using SC4L3K4T.Bluetooth;
+using SC4L3K4T.Models;
+
 
 
 #if ANDROID
@@ -51,9 +53,9 @@ namespace SC4L3K4T
             {
                 var devices = await _bluetoothService.ScanAsync();
 
-                foreach (var device in devices)
+                foreach (var deviceInfo in devices)
                 {
-                    await AddDeviceToListAsync(device);
+                    await AddDeviceToListAsync(deviceInfo);
                 }
 
                 BluetoothStatusLabel.Text =
@@ -77,10 +79,12 @@ namespace SC4L3K4T
             }            
         }
 
-        private async Task AddDeviceToListAsync(IDevice device)
+        private async Task AddDeviceToListAsync(BleDeviceInfo deviceInfo)
         {
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
+                var device = deviceInfo.Device;
+
                 var name = string.IsNullOrWhiteSpace(device.Name)
                     ? "Sin nombre"
                     : device.Name;
@@ -110,9 +114,9 @@ namespace SC4L3K4T
                     {
                         BluetoothStatusLabel.Text = $"Conectando a {name}...";
 
-                        await _bluetoothService.ConnectAsync(device);
+                        await _bluetoothService.ConnectAsync(deviceInfo);
 
-                        _connectedDevice = device;
+                        _connectedDevice = deviceInfo.Device;
 
                         BluetoothStatusLabel.Text = $"Conectado: {name}";
 
@@ -122,7 +126,7 @@ namespace SC4L3K4T
                             "OK");
 
                         var data = await _bluetoothService.ReadAsync(
-                            device,
+                            deviceInfo,
                             BleConstants.ScaleCarServiceUuid,
                             BleConstants.TestCharacteristicUuid);
 
@@ -136,7 +140,7 @@ namespace SC4L3K4T
                         var message = System.Text.Encoding.UTF8.GetBytes("HELLOWORLD");
 
                         await _bluetoothService.WriteAsync(
-                            device,
+                            deviceInfo,
                             BleConstants.ScaleCarServiceUuid,
                             BleConstants.TestCharacteristicUuid,
                             message);

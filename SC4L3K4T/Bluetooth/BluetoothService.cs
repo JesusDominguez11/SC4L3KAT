@@ -2,6 +2,7 @@
 using Plugin.BLE.Abstractions;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
+using SC4L3K4T.Models;
 
 namespace SC4L3K4T.Bluetooth
 {
@@ -16,7 +17,7 @@ namespace SC4L3K4T.Bluetooth
             _adapter = CrossBluetoothLE.Current.Adapter;
         }
 
-        public async Task<IReadOnlyList<IDevice>> ScanAsync()
+        public async Task<IReadOnlyList<BleDeviceInfo>> ScanAsync()
         {
             if (_bluetooth.State != BluetoothState.On)
             {
@@ -24,7 +25,7 @@ namespace SC4L3K4T.Bluetooth
                     "El Bluetooth está apagado.");
             }
 
-            var devices = new Dictionary<Guid, IDevice>();
+            var devices = new Dictionary<Guid, BleDeviceInfo>();
 
             void OnDeviceDiscovered(
                 object? sender,
@@ -48,9 +49,14 @@ namespace SC4L3K4T.Bluetooth
                 if (!isScaleCar)
                     return;
 
+                var deviceInfo = new BleDeviceInfo
+                {
+                    Device = device
+                };
+
                 if (!devices.ContainsKey(device.Id))
                 {
-                    devices.Add(device.Id, device);
+                    devices.Add(device.Id, deviceInfo);
                 }
             }
 
@@ -68,21 +74,21 @@ namespace SC4L3K4T.Bluetooth
             return devices.Values.ToList();
         }
 
-        public async Task ConnectAsync(IDevice device)
+        public async Task ConnectAsync(BleDeviceInfo deviceInfo)
         {
             await _adapter.ConnectToDeviceAsync(
-                device,
+                deviceInfo.Device,
                 new ConnectParameters(
                     autoConnect: false,
                     forceBleTransport: true));
         }
 
         public async Task<byte[]> ReadAsync(
-            IDevice device,
+            BleDeviceInfo deviceInfo,
             Guid serviceUuid,
             Guid characteristicUuid)
         {
-            var service = await device.GetServiceAsync(serviceUuid);
+            var service = await deviceInfo.Device.GetServiceAsync(serviceUuid);
 
             if (service == null)
             {
@@ -106,12 +112,12 @@ namespace SC4L3K4T.Bluetooth
         }
 
         public async Task WriteAsync(
-            IDevice device,
+            BleDeviceInfo deviceInfo,
             Guid serviceUuid,
             Guid characteristicUuid,
             byte[] data)
         {
-            var service = await device.GetServiceAsync(serviceUuid);
+            var service = await deviceInfo.Device.GetServiceAsync(serviceUuid);
 
             if (service == null)
             {
@@ -131,9 +137,9 @@ namespace SC4L3K4T.Bluetooth
             await characteristic.WriteAsync(data);
         }
 
-        public async Task DisconnectAsync(IDevice device)
+        public async Task DisconnectAsync(BleDeviceInfo deviceInfo)
         {
-            await _adapter.DisconnectDeviceAsync(device);
+            await _adapter.DisconnectDeviceAsync(deviceInfo.Device);
         }
     }
 }
