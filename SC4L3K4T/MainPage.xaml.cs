@@ -108,10 +108,50 @@ namespace SC4L3K4T
 
                 connectButton.Clicked += async (_, _) =>
                 {
-                    await DisplayAlertAsync(
-                        "Dispositivo seleccionado",
-                        $"{name}\n{device.Id}",
-                        "OK");
+                    try
+                    {
+                        BluetoothStatusLabel.Text = $"Conectando a {name}...";
+
+                        await _bluetoothService.ConnectAsync(device);
+
+                        _connectedDevice = device;
+
+                        BluetoothStatusLabel.Text = $"Conectado: {name}";
+
+                        await DisplayAlertAsync(
+                            "Bluetooth",
+                            $"Conectado correctamente a:\n{name}",
+                            "OK");
+
+                        var data = await _bluetoothService.ReadAsync(
+                            device,
+                            ScaleCarServiceUuid,
+                            TestCharacteristicUuid);
+
+                        var text = System.Text.Encoding.UTF8.GetString(data);
+
+                        await DisplayAlertAsync(
+                            "BLE Read",
+                            $"Datos recibidos:\n{text}",
+                            "OK");
+
+                        var message = System.Text.Encoding.UTF8.GetBytes("HELLOWORLD");
+
+                        await _bluetoothService.WriteAsync(
+                            device,
+                            ScaleCarServiceUuid,
+                            TestCharacteristicUuid,
+                            message);
+                    }
+                    catch (Exception ex)
+                    {
+                        BluetoothStatusLabel.Text = "Bluetooth: Error de conexión";
+
+                        await DisplayAlertAsync(
+                            "Error",
+                            $"{ex.GetType().Name}\n\n{ex.Message}",
+                            "OK");
+                    }
                 };
 
                 var deviceLayout = new VerticalStackLayout
