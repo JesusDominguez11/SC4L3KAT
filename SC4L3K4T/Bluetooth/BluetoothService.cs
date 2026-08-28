@@ -32,6 +32,22 @@ namespace SC4L3K4T.Bluetooth
             {
                 var device = args.Device;
 
+                var isScaleCar = device.AdvertisementRecords.Any(record =>
+                {
+                    if (record.Type != AdvertisementRecordType.UuidsComplete128Bit)
+                        return false;
+
+                    if (record.Data.Length != 16)
+                        return false;
+
+                    var uuid = BleUuidHelper.FromAdvertisementBytes(record.Data);
+
+                    return uuid == BleConstants.ScaleCarServiceUuid;
+                });
+
+                if (!isScaleCar)
+                    return;
+
                 if (!devices.ContainsKey(device.Id))
                 {
                     devices.Add(device.Id, device);

@@ -13,8 +13,6 @@ namespace SC4L3K4T
     {
         private IDevice? _connectedDevice;
         private readonly IBluetoothService _bluetoothService;
-        private static readonly Guid ScaleCarServiceUuid = Guid.Parse("6E400001-B5A3-F393-E0A9-E50E24DCCA9E");
-        private static readonly Guid TestCharacteristicUuid = Guid.Parse("6E400002-B5A3-F393-E0A9-E50E24DCCA9E");
         public MainPage()
         {
             InitializeComponent();
@@ -125,8 +123,8 @@ namespace SC4L3K4T
 
                         var data = await _bluetoothService.ReadAsync(
                             device,
-                            ScaleCarServiceUuid,
-                            TestCharacteristicUuid);
+                            BleConstants.ScaleCarServiceUuid,
+                            BleConstants.TestCharacteristicUuid);
 
                         var text = System.Text.Encoding.UTF8.GetString(data);
 
@@ -139,8 +137,8 @@ namespace SC4L3K4T
 
                         await _bluetoothService.WriteAsync(
                             device,
-                            ScaleCarServiceUuid,
-                            TestCharacteristicUuid,
+                            BleConstants.ScaleCarServiceUuid,
+                            BleConstants.TestCharacteristicUuid,
                             message);
                     }
                     catch (Exception ex)
