@@ -1,6 +1,8 @@
 ﻿using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
 using Plugin.BLE.Abstractions.EventArgs;
+using Plugin.BLE.Abstractions;
+
 
 
 #if ANDROID
@@ -120,9 +122,15 @@ namespace SC4L3K4T
                     {
                         try
                         {
+                            ScanButton.IsEnabled = false;
+
                             BluetoothStatusLabel.Text = $"Conectando a {name}...";
 
-                            await adapter.ConnectToDeviceAsync(device);
+                            await adapter.ConnectToDeviceAsync(
+                                device,
+                                new ConnectParameters(
+                                    autoConnect: false,
+                                    forceBleTransport: true));
 
                             _connectedDevice = device;
 
@@ -139,8 +147,12 @@ namespace SC4L3K4T
 
                             await DisplayAlertAsync(
                                 "Error",
-                                $"No se pudo conectar:\n{ex.Message}",
+                                $"{ex.GetType().Name}\n\n{ex.Message}",
                                 "OK");
+                        }
+                        finally
+                        {
+                            ScanButton.IsEnabled = true;
                         }
                     };
 
