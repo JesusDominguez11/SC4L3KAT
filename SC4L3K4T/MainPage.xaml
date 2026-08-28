@@ -41,6 +41,13 @@
                 x:Name="DevicesLayout"
                 Spacing="10" />
 
+            <Button
+                x:Name="LedButton"
+                Text="Encender LED"
+                Pressed="OnLedButtonPressed"
+                Released="OnLedButtonReleased"
+                IsEnabled="False" />
+
             <BlazorWebView IsVisible="False" x:Name="blazorWebView" HostPage="wwwroot/index.html">
                 <BlazorWebView.RootComponents>
                     <RootComponent Selector="#app" ComponentType="{x:Type components:Routes}" />

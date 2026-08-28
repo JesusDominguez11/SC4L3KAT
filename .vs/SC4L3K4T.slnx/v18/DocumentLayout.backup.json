@@ -11,12 +11,12 @@
       "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\bluetooth\\bluetoothservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\jd66188\\source\\repos\\sc4l3k4t\\sc4l3k4t\\bluetooth\\ibluetoothservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\bluetooth\\ibluetoothservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\jd66188\\source\\repos\\sc4l3k4t\\sc4l3k4t\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\mainpage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\jd66188\\source\\repos\\sc4l3k4t\\sc4l3k4t\\bluetooth\\ibluetoothservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\bluetooth\\ibluetoothservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,16 +30,17 @@
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "MainPage.xaml",
               "DocumentMoniker": "C:\\Users\\JD66188\\source\\repos\\SC4L3K4T\\SC4L3K4T\\MainPage.xaml",
               "RelativeDocumentMoniker": "SC4L3K4T\\MainPage.xaml",
               "ToolTip": "C:\\Users\\JD66188\\source\\repos\\SC4L3K4T\\SC4L3K4T\\MainPage.xaml",
               "RelativeToolTip": "SC4L3K4T\\MainPage.xaml",
-              "ViewState": "AgIAAAYAAAAAAAAAAAAAAB8AAAAYAAAAAAAAAA==",
+              "ViewState": "AgIAAAwAAAAAAAAAAAAAACkAAAAfAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-08-27T23:25:09.286Z",
-              "IsPinned": true
+              "IsPinned": true,
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -49,7 +50,7 @@
               "RelativeDocumentMoniker": "SC4L3K4T\\MainPage.xaml.cs",
               "ToolTip": "C:\\Users\\JD66188\\source\\repos\\SC4L3K4T\\SC4L3K4T\\MainPage.xaml.cs",
               "RelativeToolTip": "SC4L3K4T\\MainPage.xaml.cs",
-              "ViewState": "AgIAAIAAAAAAAAAAAAAAwJIAAAAVAAAAAAAAAA==",
+              "ViewState": "AgIAAKUAAAAAAAAAAAAAwMEAAAAVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-27T23:25:09.961Z",
               "IsPinned": true,
@@ -63,7 +64,7 @@
               "RelativeDocumentMoniker": "SC4L3K4T\\Bluetooth\\BluetoothService.cs",
               "ToolTip": "C:\\Users\\JD66188\\source\\repos\\SC4L3K4T\\SC4L3K4T\\Bluetooth\\BluetoothService.cs",
               "RelativeToolTip": "SC4L3K4T\\Bluetooth\\BluetoothService.cs",
-              "ViewState": "AgIAAHEAAAAAAAAAAAAwwIEAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAHEAAAAAAAAAAAA9wIEAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-28T15:46:46.822Z",
               "IsPinned": true,
@@ -75,7 +76,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 3,
               "Title": "IBluetoothService.cs",
               "DocumentMoniker": "C:\\Users\\JD66188\\source\\repos\\SC4L3K4T\\SC4L3K4T\\Bluetooth\\IBluetoothService.cs",
               "RelativeDocumentMoniker": "SC4L3K4T\\Bluetooth\\IBluetoothService.cs",
@@ -83,8 +84,7 @@
               "RelativeToolTip": "SC4L3K4T\\Bluetooth\\IBluetoothService.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAABkAAAA1AAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-28T17:41:39.665Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-08-28T17:41:39.665Z"
             }
           ]
         }

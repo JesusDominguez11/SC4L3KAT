@@ -12,8 +12,7 @@ using Android.Content.PM;
 namespace SC4L3K4T
 {
     public partial class MainPage : ContentPage
-    {
-        private IDevice? _connectedDevice;
+    {        
         private readonly IBluetoothService _bluetoothService;
         public MainPage()
         {
@@ -79,6 +78,9 @@ namespace SC4L3K4T
             }            
         }
 
+        private bool _isConnected;
+        private BleDeviceInfo? _connectedDevice;
+        Button? connectedButton = null;
         private async Task AddDeviceToListAsync(BleDeviceInfo deviceInfo)
         {
             await MainThread.InvokeOnMainThreadAsync(() =>
@@ -110,50 +112,87 @@ namespace SC4L3K4T
 
                 connectButton.Clicked += async (_, _) =>
                 {
+                    if (!_isConnected)
+                    {
+                        try
+                        {
+                            BluetoothStatusLabel.Text = $"Conectando a {name}...";
+
+                            await _bluetoothService.ConnectAsync(deviceInfo);
+
+                            _connectedDevice = deviceInfo;
+                            _isConnected = true;
+
+                            connectButton.Text = "Desconectar";
+
+                            LedButton.IsEnabled = true;
+                            LedButton.Text = "Encender LED";
+
+                            BluetoothStatusLabel.Text = $"Conectado: {name}";
+
+                            //await DisplayAlertAsync(
+                            //    "Bluetooth",
+                            //    $"Conectado correctamente a:\n{name}",
+                            //    "OK");
+
+                            //var data = await _bluetoothService.ReadAsync(
+                            //    deviceInfo,
+                            //    BleConstants.ScaleCarServiceUuid,
+                            //    BleConstants.TestCharacteristicUuid);
+
+                            //var text = System.Text.Encoding.UTF8.GetString(data);
+
+                            //await DisplayAlertAsync(
+                            //    "BLE Read",
+                            //    $"Datos recibidos:\n{text}",
+                            //    "OK");
+
+                            //var message = System.Text.Encoding.UTF8.GetBytes("HELLOWORLD");
+
+                            //await _bluetoothService.WriteAsync(
+                            //    deviceInfo,
+                            //    BleConstants.ScaleCarServiceUuid,
+                            //    BleConstants.TestCharacteristicUuid,
+                            //    message);
+                        }
+                        catch (Exception ex)
+                        {
+                            BluetoothStatusLabel.Text = "Bluetooth: Error de conexión";
+
+                            await DisplayAlertAsync(
+                                "Error",
+                                $"{ex.GetType().Name}\n\n{ex.Message}",
+                                "OK");
+                        }
+
+                        return;
+                    }
+
+                    if (_connectedDevice is null)
+                        return;
+
                     try
                     {
-                        BluetoothStatusLabel.Text = $"Conectando a {name}...";
+                        await _bluetoothService.DisconnectAsync(
+                            _connectedDevice);
 
-                        await _bluetoothService.ConnectAsync(deviceInfo);
+                        _connectedDevice = null;
+                        _isConnected = false;
 
-                        _connectedDevice = deviceInfo.Device;
+                        connectButton.Text = "Conectar";
 
-                        BluetoothStatusLabel.Text = $"Conectado: {name}";
+                        LedButton.IsEnabled = false;
 
-                        await DisplayAlertAsync(
-                            "Bluetooth",
-                            $"Conectado correctamente a:\n{name}",
-                            "OK");
-
-                        var data = await _bluetoothService.ReadAsync(
-                            deviceInfo,
-                            BleConstants.ScaleCarServiceUuid,
-                            BleConstants.TestCharacteristicUuid);
-
-                        var text = System.Text.Encoding.UTF8.GetString(data);
-
-                        await DisplayAlertAsync(
-                            "BLE Read",
-                            $"Datos recibidos:\n{text}",
-                            "OK");
-
-                        var message = System.Text.Encoding.UTF8.GetBytes("HELLOWORLD");
-
-                        await _bluetoothService.WriteAsync(
-                            deviceInfo,
-                            BleConstants.ScaleCarServiceUuid,
-                            BleConstants.TestCharacteristicUuid,
-                            message);
+                        BluetoothStatusLabel.Text = "Bluetooth: Listo";
                     }
                     catch (Exception ex)
                     {
-                        BluetoothStatusLabel.Text = "Bluetooth: Error de conexión";
-
                         await DisplayAlertAsync(
-                            "Error",
-                            $"{ex.GetType().Name}\n\n{ex.Message}",
+                            "Error al desconectar",
+                            ex.Message,
                             "OK");
                     }
+
                 };
 
                 var deviceLayout = new VerticalStackLayout
@@ -169,6 +208,34 @@ namespace SC4L3K4T
 
                 DevicesLayout.Children.Add(deviceLayout);
             });
+        }
+
+        private async void OnLedButtonPressed(object sender, EventArgs e)
+        {
+            if (!_isConnected || _connectedDevice is null)
+                return;
+
+            var data = System.Text.Encoding.UTF8.GetBytes("LED_ON");
+
+            await _bluetoothService.WriteAsync(
+                _connectedDevice,
+                BleConstants.ScaleCarServiceUuid,
+                BleConstants.TestCharacteristicUuid,
+                data);
+        }
+
+        private async void OnLedButtonReleased(object sender, EventArgs e)
+        {
+            if (!_isConnected || _connectedDevice is null)
+                return;
+
+            var data = System.Text.Encoding.UTF8.GetBytes("LED_OFF");
+
+            await _bluetoothService.WriteAsync(
+                _connectedDevice,
+                BleConstants.ScaleCarServiceUuid,
+                BleConstants.TestCharacteristicUuid,
+                data);
         }
     }
 }
