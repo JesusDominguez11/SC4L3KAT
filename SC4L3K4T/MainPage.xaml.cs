@@ -81,6 +81,7 @@ namespace SC4L3K4T
 
             DevicesLayout.Clear();
             _discoveredDeviceIds.Clear();
+            _deviceRssiLabels.Clear();
         }
 
         private void SetBluetoothOnState()
@@ -92,6 +93,7 @@ namespace SC4L3K4T
 
             DevicesLayout.Clear();
             _discoveredDeviceIds.Clear();
+            _deviceRssiLabels.Clear();
         }
 
         private void ClearConnectionState()
@@ -133,15 +135,35 @@ namespace SC4L3K4T
         }
 
         private readonly HashSet<Guid> _discoveredDeviceIds = new();
+        private readonly Dictionary<Guid, Label> _deviceRssiLabels = new();
         private async void OnDeviceDiscovered(
     object? sender,
     BleDeviceInfo deviceInfo)
         {
-            if (!_discoveredDeviceIds.Add(deviceInfo.Id))
-                return;
-
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
+                // ========================================
+                // Dispositivo ya existente
+                // ========================================
+
+                if (_discoveredDeviceIds.Contains(deviceInfo.Id))
+                {
+                    if (_deviceRssiLabels.TryGetValue(
+                        deviceInfo.Id,
+                        out var rssiLabel))
+                    {
+                        rssiLabel.Text = $"Señal: {deviceInfo.Rssi} dBm";
+                    }
+
+                    return;
+                }
+
+                // ========================================
+                // Dispositivo nuevo
+                // ========================================
+
+                _discoveredDeviceIds.Add(deviceInfo.Id);
+
                 var nameLabel = new Label
                 {
                     Text = deviceInfo.Name,
@@ -154,6 +176,16 @@ namespace SC4L3K4T
                     Text = deviceInfo.Id.ToString(),
                     FontSize = 12
                 };
+
+                var rssiLabelNew = new Label
+                {
+                    Text = $"Señal: {deviceInfo.Rssi} dBm",
+                    FontSize = 14
+                };
+
+                _deviceRssiLabels.Add(
+    deviceInfo.Id,
+    rssiLabelNew);
 
                 var connectButton = new Button
                 {
@@ -221,6 +253,7 @@ namespace SC4L3K4T
 
                 deviceLayout.Children.Add(nameLabel);
                 deviceLayout.Children.Add(idLabel);
+                deviceLayout.Children.Add(rssiLabelNew);
                 deviceLayout.Children.Add(connectButton);
 
                 DevicesLayout.Children.Add(deviceLayout);

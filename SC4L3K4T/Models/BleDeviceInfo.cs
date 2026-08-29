@@ -15,5 +15,7 @@ namespace SC4L3K4T.Models
                 : Device.Name;
 
         public Guid Id => Device.Id;
+
+        public int Rssi { get; set; }
     }
 }

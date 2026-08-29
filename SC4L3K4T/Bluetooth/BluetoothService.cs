@@ -59,7 +59,8 @@ namespace SC4L3K4T.Bluetooth
 
                 var deviceInfo = new BleDeviceInfo
                 {
-                    Device = device
+                    Device = device,
+                    Rssi = device.Rssi
                 };
 
                 DeviceDiscovered?.Invoke(
