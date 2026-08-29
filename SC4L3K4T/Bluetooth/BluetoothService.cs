@@ -71,7 +71,7 @@ namespace SC4L3K4T.Bluetooth
 
             try
             {
-                while (_isScanning)
+                while (_isScanning && _bluetooth.State == BluetoothState.On)
                 {
                     await _adapter.StartScanningForDevicesAsync();
                 }
@@ -87,6 +87,11 @@ namespace SC4L3K4T.Bluetooth
     object? sender,
     BluetoothStateChangedArgs e)
         {
+            if (e.NewState != BluetoothState.On)
+            {
+                _isScanning = false;
+            }
+
             BluetoothStateChanged?.Invoke(this, e);
         }
 

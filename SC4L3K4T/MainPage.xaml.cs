@@ -85,8 +85,6 @@ namespace SC4L3K4T
 
         private void SetBluetoothOnState()
         {
-            _scanStarted = true;
-
             ScanActivityIndicator.IsRunning = true;
             ScanActivityIndicator.IsVisible = true;
 
@@ -96,14 +94,34 @@ namespace SC4L3K4T
             _discoveredDeviceIds.Clear();
         }
 
+        private void ClearConnectionState()
+        {
+            _isConnected = false;
+            _connectedDevice = null;
+
+            if (connectedButton is not null)
+            {
+                connectedButton.Text = "Conectar";
+            }
+
+            connectedButton = null;
+        }
+
         private async Task StartBluetoothScanAsync()
         {
+            if (_scanStarted)
+                return;
+
+            _scanStarted = true;
+
             try
             {
                 await _bluetoothService.ScanAsync();
             }
             catch (Exception ex)
             {
+                _scanStarted = false;
+
                 await MainThread.InvokeOnMainThreadAsync(async () =>
                 {
                     await DisplayAlertAsync(
@@ -147,7 +165,38 @@ namespace SC4L3K4T
                 {
                     try
                     {
+                        if (_isConnected &&
+                            _connectedDevice is not null &&
+                            _connectedDevice.Id == deviceInfo.Id)
+                        {
+                            await _bluetoothService.DisconnectAsync(
+                                _connectedDevice);
+
+                            ClearConnectionState();
+
+                            connectButton.Text = "Conectar";
+
+                            return;
+                        }
+
+                        if (_isConnected && _connectedDevice is not null)
+                        {
+                            if (_connectedDevice.Id != deviceInfo.Id)
+                            {
+                                await _bluetoothService.DisconnectAsync(
+                                    _connectedDevice);
+
+                                ClearConnectionState();
+                            }
+                        }
+
                         await _bluetoothService.ConnectAsync(deviceInfo);
+
+                        _isConnected = true;
+                        _connectedDevice = deviceInfo;
+                        connectedButton = connectButton;
+
+                        connectButton.Text = "Desconectar";
 
                         await DisplayAlertAsync(
                             "Conectado",
@@ -190,6 +239,7 @@ namespace SC4L3K4T
             }
             else
             {
+                ClearConnectionState();
                 SetBluetoothOffState();
             }
         }
