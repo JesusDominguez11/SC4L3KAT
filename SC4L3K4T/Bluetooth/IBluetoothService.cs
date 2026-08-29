@@ -1,4 +1,5 @@
 ﻿using Plugin.BLE.Abstractions.Contracts;
+using Plugin.BLE.Abstractions.EventArgs;
 using SC4L3K4T.Models;
 using System;
 using System.Collections.Generic;
@@ -8,7 +9,9 @@ namespace SC4L3K4T.Bluetooth
 {
     public interface IBluetoothService
     {
-        Task<IReadOnlyList<BleDeviceInfo>> ScanAsync();
+        event EventHandler<BleDeviceInfo>? DeviceDiscovered;
+
+        Task ScanAsync();
 
         Task ConnectAsync(BleDeviceInfo deviceInfo);
 

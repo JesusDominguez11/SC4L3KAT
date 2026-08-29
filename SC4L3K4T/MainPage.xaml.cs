@@ -19,88 +19,88 @@ namespace SC4L3K4T
             InitializeComponent();
 
             _bluetoothService = new BluetoothService();
+            _bluetoothService.DeviceDiscovered += OnDeviceDiscovered;
         }
 
-        private async void OnScanClicked(object sender, EventArgs e)
+        protected override async void OnAppearing()
         {
-#if ANDROID
-    if (OperatingSystem.IsAndroidVersionAtLeast(31))
-    {
-        var permission = await Permissions.RequestAsync<Permissions.Bluetooth>();
-
-        if (permission != PermissionStatus.Granted)
-        {
-            await DisplayAlertAsync(
-                "Permisos",
-                "Se necesita permiso para buscar dispositivos Bluetooth.",
-                "OK");
-
-            return;
-        }
-    }
-#endif
-
-            ScanButton.IsEnabled = false;
-            ScanActivityIndicator.IsVisible = true;
-            ScanActivityIndicator.IsRunning = true;
-
-            BluetoothStatusLabel.Text = "Bluetooth: Escaneando...";
-
-            DevicesLayout.Clear();
+            base.OnAppearing();
 
             try
             {
-                var devices = await _bluetoothService.ScanAsync();
-
-                foreach (var deviceInfo in devices)
+#if ANDROID
+                if (OperatingSystem.IsAndroidVersionAtLeast(31))
                 {
-                    await AddDeviceToListAsync(deviceInfo);
-                }
+                    var permission = await Permissions.RequestAsync<Permissions.Bluetooth>();
 
-                BluetoothStatusLabel.Text =
-                    $"Bluetooth: Listo ({devices.Count} dispositivos)";
+                    if (permission != PermissionStatus.Granted)
+                    {
+                        await DisplayAlertAsync(
+                            "Permisos",
+                            "Se necesita permiso para buscar dispositivos Bluetooth.",
+                            "OK");
+
+                        return;
+                    }
+                }
+#endif
+
+                ScanActivityIndicator.IsVisible = true;
+                ScanActivityIndicator.IsRunning = true;
+
+                BluetoothStatusLabel.Text = "Bluetooth: Escaneando...";
+
+                DevicesLayout.Clear();
+
+                _ = StartBluetoothScanAsync();
             }
             catch (Exception ex)
             {
-                BluetoothStatusLabel.Text = "Bluetooth: Error";
-
                 await DisplayAlertAsync(
                     "Bluetooth",
                     ex.Message,
                     "OK");
             }
-            finally
-            {
-                ScanActivityIndicator.IsRunning = false;
-                ScanActivityIndicator.IsVisible = false;
-
-                ScanButton.IsEnabled = true;
-            }            
         }
 
-        private bool _isConnected;
-        private BleDeviceInfo? _connectedDevice;
-        Button? connectedButton = null;
-        private async Task AddDeviceToListAsync(BleDeviceInfo deviceInfo)
+        private async Task StartBluetoothScanAsync()
         {
+            try
+            {
+                await _bluetoothService.ScanAsync();
+            }
+            catch (Exception ex)
+            {
+                await MainThread.InvokeOnMainThreadAsync(async () =>
+                {
+                    await DisplayAlertAsync(
+                        "Bluetooth",
+                        ex.Message,
+                        "OK");
+                });
+            }
+        }
+
+        private readonly HashSet<Guid> _discoveredDeviceIds = new();
+        private async void OnDeviceDiscovered(
+    object? sender,
+    BleDeviceInfo deviceInfo)
+        {
+            if (!_discoveredDeviceIds.Add(deviceInfo.Id))
+                return;
+
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
-                var device = deviceInfo.Device;
-
-                var name = string.IsNullOrWhiteSpace(device.Name)
-                    ? "Sin nombre"
-                    : device.Name;
-
                 var nameLabel = new Label
                 {
-                    Text = name,
+                    Text = deviceInfo.Name,
                     FontSize = 18,
                     FontAttributes = FontAttributes.Bold
                 };
 
                 var idLabel = new Label
                 {
-                    Text = device.Id.ToString(),
+                    Text = deviceInfo.Id.ToString(),
                     FontSize = 12
                 };
 
@@ -112,87 +112,22 @@ namespace SC4L3K4T
 
                 connectButton.Clicked += async (_, _) =>
                 {
-                    if (!_isConnected)
-                    {
-                        try
-                        {
-                            BluetoothStatusLabel.Text = $"Conectando a {name}...";
-
-                            await _bluetoothService.ConnectAsync(deviceInfo);
-
-                            _connectedDevice = deviceInfo;
-                            _isConnected = true;
-
-                            connectButton.Text = "Desconectar";
-
-                            LedButton.IsEnabled = true;
-                            LedButton.Text = "Encender LED";
-
-                            BluetoothStatusLabel.Text = $"Conectado: {name}";
-
-                            //await DisplayAlertAsync(
-                            //    "Bluetooth",
-                            //    $"Conectado correctamente a:\n{name}",
-                            //    "OK");
-
-                            //var data = await _bluetoothService.ReadAsync(
-                            //    deviceInfo,
-                            //    BleConstants.ScaleCarServiceUuid,
-                            //    BleConstants.TestCharacteristicUuid);
-
-                            //var text = System.Text.Encoding.UTF8.GetString(data);
-
-                            //await DisplayAlertAsync(
-                            //    "BLE Read",
-                            //    $"Datos recibidos:\n{text}",
-                            //    "OK");
-
-                            //var message = System.Text.Encoding.UTF8.GetBytes("HELLOWORLD");
-
-                            //await _bluetoothService.WriteAsync(
-                            //    deviceInfo,
-                            //    BleConstants.ScaleCarServiceUuid,
-                            //    BleConstants.TestCharacteristicUuid,
-                            //    message);
-                        }
-                        catch (Exception ex)
-                        {
-                            BluetoothStatusLabel.Text = "Bluetooth: Error de conexión";
-
-                            await DisplayAlertAsync(
-                                "Error",
-                                $"{ex.GetType().Name}\n\n{ex.Message}",
-                                "OK");
-                        }
-
-                        return;
-                    }
-
-                    if (_connectedDevice is null)
-                        return;
-
                     try
                     {
-                        await _bluetoothService.DisconnectAsync(
-                            _connectedDevice);
+                        await _bluetoothService.ConnectAsync(deviceInfo);
 
-                        _connectedDevice = null;
-                        _isConnected = false;
-
-                        connectButton.Text = "Conectar";
-
-                        LedButton.IsEnabled = false;
-
-                        BluetoothStatusLabel.Text = "Bluetooth: Listo";
+                        await DisplayAlertAsync(
+                            "Conectado",
+                            $"Conectado a {deviceInfo.Name}",
+                            "OK");
                     }
                     catch (Exception ex)
                     {
                         await DisplayAlertAsync(
-                            "Error al desconectar",
+                            "Error de conexión",
                             ex.Message,
                             "OK");
                     }
-
                 };
 
                 var deviceLayout = new VerticalStackLayout
@@ -210,6 +145,10 @@ namespace SC4L3K4T
             });
         }
 
+        private bool _isConnected;
+        private BleDeviceInfo? _connectedDevice;
+        Button? connectedButton = null;
+    
         private async void OnLedButtonPressed(object sender, EventArgs e)
         {
             if (!_isConnected || _connectedDevice is null)

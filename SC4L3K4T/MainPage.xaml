@@ -27,10 +27,10 @@
             IsRunning="False"
             IsVisible="False" />
 
-            <Button x:Name="ScanButton" 
+            <!--<Button x:Name="ScanButton" 
             BackgroundColor="White"
             Text="Escanear BLE"
-            Clicked="OnScanClicked"/>
+            Clicked="OnScanClicked"/>-->
 
             <Label
                 Text="Dispositivos encontrados"

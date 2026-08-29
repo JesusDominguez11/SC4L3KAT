@@ -10,6 +10,8 @@ namespace SC4L3K4T.Bluetooth
     {
         private readonly IBluetoothLE _bluetooth;
         private readonly IAdapter _adapter;
+        public event EventHandler<BleDeviceInfo>? DeviceDiscovered;
+        private bool _isScanning;
 
         public BluetoothService()
         {
@@ -17,7 +19,7 @@ namespace SC4L3K4T.Bluetooth
             _adapter = CrossBluetoothLE.Current.Adapter;
         }
 
-        public async Task<IReadOnlyList<BleDeviceInfo>> ScanAsync()
+        public async Task ScanAsync()
         {
             if (_bluetooth.State != BluetoothState.On)
             {
@@ -25,11 +27,14 @@ namespace SC4L3K4T.Bluetooth
                     "El Bluetooth está apagado.");
             }
 
-            var devices = new Dictionary<Guid, BleDeviceInfo>();
+            if (_isScanning)
+                return;
+
+            _isScanning = true;
 
             void OnDeviceDiscovered(
-                object? sender,
-                DeviceEventArgs args)
+        object? sender,
+        DeviceEventArgs args)
             {
                 var device = args.Device;
 
@@ -54,24 +59,25 @@ namespace SC4L3K4T.Bluetooth
                     Device = device
                 };
 
-                if (!devices.ContainsKey(device.Id))
-                {
-                    devices.Add(device.Id, deviceInfo);
-                }
+                DeviceDiscovered?.Invoke(
+                    this,
+                    deviceInfo);
             }
 
             _adapter.DeviceDiscovered += OnDeviceDiscovered;
 
             try
             {
-                await _adapter.StartScanningForDevicesAsync();
+                while (_isScanning)
+                {
+                    await _adapter.StartScanningForDevicesAsync();
+                }
             }
             finally
             {
                 _adapter.DeviceDiscovered -= OnDeviceDiscovered;
+                _isScanning = false;
             }
-
-            return devices.Values.ToList();
         }
 
         public async Task ConnectAsync(BleDeviceInfo deviceInfo)
