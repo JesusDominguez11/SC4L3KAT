@@ -10,6 +10,7 @@ namespace SC4L3K4T.Bluetooth
     public interface IBluetoothService
     {
         event EventHandler<BleDeviceInfo>? DeviceDiscovered;
+        event EventHandler<BluetoothStateChangedArgs>? BluetoothStateChanged;
 
         Task ScanAsync();
 

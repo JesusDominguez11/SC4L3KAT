@@ -11,12 +11,15 @@ namespace SC4L3K4T.Bluetooth
         private readonly IBluetoothLE _bluetooth;
         private readonly IAdapter _adapter;
         public event EventHandler<BleDeviceInfo>? DeviceDiscovered;
+        public event EventHandler<BluetoothStateChangedArgs>? BluetoothStateChanged;
         private bool _isScanning;
 
         public BluetoothService()
         {
             _bluetooth = CrossBluetoothLE.Current;
             _adapter = CrossBluetoothLE.Current.Adapter;
+
+            _bluetooth.StateChanged += OnBluetoothStateChanged;
         }
 
         public async Task ScanAsync()
@@ -78,6 +81,13 @@ namespace SC4L3K4T.Bluetooth
                 _adapter.DeviceDiscovered -= OnDeviceDiscovered;
                 _isScanning = false;
             }
+        }
+
+        private void OnBluetoothStateChanged(
+    object? sender,
+    BluetoothStateChangedArgs e)
+        {
+            BluetoothStateChanged?.Invoke(this, e);
         }
 
         public async Task ConnectAsync(BleDeviceInfo deviceInfo)

@@ -1,6 +1,10 @@
 ﻿using Plugin.BLE.Abstractions.Contracts;
 using SC4L3K4T.Bluetooth;
 using SC4L3K4T.Models;
+using Plugin.BLE.Abstractions.EventArgs;
+using Plugin.BLE;
+
+
 
 
 
@@ -20,6 +24,8 @@ namespace SC4L3K4T
 
             _bluetoothService = new BluetoothService();
             _bluetoothService.DeviceDiscovered += OnDeviceDiscovered;
+
+            _bluetoothService.BluetoothStateChanged += OnBluetoothStateChanged;
         }
 
         protected override async void OnAppearing()
@@ -45,14 +51,15 @@ namespace SC4L3K4T
                 }
 #endif
 
-                ScanActivityIndicator.IsVisible = true;
-                ScanActivityIndicator.IsRunning = true;
-
-                BluetoothStatusLabel.Text = "Bluetooth: Escaneando...";
-
-                DevicesLayout.Clear();
-
-                _ = StartBluetoothScanAsync();
+                if (CrossBluetoothLE.Current.State == BluetoothState.On)
+                {
+                    SetBluetoothOnState();
+                    _ = StartBluetoothScanAsync();
+                }
+                else
+                {
+                    SetBluetoothOffState();
+                }
             }
             catch (Exception ex)
             {
@@ -61,6 +68,32 @@ namespace SC4L3K4T
                     ex.Message,
                     "OK");
             }
+        }
+
+        private void SetBluetoothOffState()
+        {
+            _scanStarted = false;
+
+            ScanActivityIndicator.IsRunning = false;
+            ScanActivityIndicator.IsVisible = false;
+
+            BluetoothStatusLabel.Text = "Bluetooth: Apagado";
+
+            DevicesLayout.Clear();
+            _discoveredDeviceIds.Clear();
+        }
+
+        private void SetBluetoothOnState()
+        {
+            _scanStarted = true;
+
+            ScanActivityIndicator.IsRunning = true;
+            ScanActivityIndicator.IsVisible = true;
+
+            BluetoothStatusLabel.Text = "Bluetooth: Buscando...";
+
+            DevicesLayout.Clear();
+            _discoveredDeviceIds.Clear();
         }
 
         private async Task StartBluetoothScanAsync()
@@ -143,6 +176,22 @@ namespace SC4L3K4T
 
                 DevicesLayout.Children.Add(deviceLayout);
             });
+        }
+
+        private bool _scanStarted;
+        private async void OnBluetoothStateChanged(
+    object? sender,
+    BluetoothStateChangedArgs e)
+        {
+            if (e.NewState == BluetoothState.On)
+            {
+                SetBluetoothOnState();
+                await StartBluetoothScanAsync();
+            }
+            else
+            {
+                SetBluetoothOffState();
+            }
         }
 
         private bool _isConnected;
