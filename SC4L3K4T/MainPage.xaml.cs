@@ -59,6 +59,7 @@ namespace SC4L3K4T
                 else
                 {
                     SetBluetoothOffState();
+                    await RequestEnableBluetoothAsync();
                 }
             }
             catch (Exception ex)
@@ -68,32 +69,6 @@ namespace SC4L3K4T
                     ex.Message,
                     "OK");
             }
-        }
-
-        private void SetBluetoothOffState()
-        {
-            _scanStarted = false;
-
-            ScanActivityIndicator.IsRunning = false;
-            ScanActivityIndicator.IsVisible = false;
-
-            BluetoothStatusLabel.Text = "Bluetooth: Apagado";
-
-            DevicesLayout.Clear();
-            _discoveredDeviceIds.Clear();
-            _deviceRssiLabels.Clear();
-        }
-
-        private void SetBluetoothOnState()
-        {
-            ScanActivityIndicator.IsRunning = true;
-            ScanActivityIndicator.IsVisible = true;
-
-            BluetoothStatusLabel.Text = "Bluetooth: Buscando...";
-
-            DevicesLayout.Clear();
-            _discoveredDeviceIds.Clear();
-            _deviceRssiLabels.Clear();
         }
 
         private void ClearConnectionState()
@@ -275,6 +250,118 @@ namespace SC4L3K4T
                 ClearConnectionState();
                 SetBluetoothOffState();
             }
+        }
+
+        private void SetBluetoothOffState()
+        {
+            _bluetoothIsOn = false;
+
+            _scanStarted = false;
+
+            ScanActivityIndicator.IsRunning = false;
+            ScanActivityIndicator.IsVisible = false;
+
+            BluetoothStatusLabel.Text = "Bluetooth: Apagado";
+
+            UpdateBluetoothSwitch(false);
+
+            DevicesLayout.Clear();
+            _discoveredDeviceIds.Clear();
+            _deviceRssiLabels.Clear();
+        }
+
+        private bool _bluetoothIsOn;
+        private void SetBluetoothOnState()
+        {
+            _bluetoothIsOn = true;
+
+            ScanActivityIndicator.IsRunning = true;
+            ScanActivityIndicator.IsVisible = true;
+
+            BluetoothStatusLabel.Text = "Bluetooth: Buscando...";
+
+            UpdateBluetoothSwitch(true);
+
+            DevicesLayout.Clear();
+            _discoveredDeviceIds.Clear();
+            _deviceRssiLabels.Clear();
+        }
+
+        private bool _updatingBluetoothSwitch;
+        private void UpdateBluetoothSwitch(bool isOn)
+        {
+            _updatingBluetoothSwitch = true;
+
+            BluetoothSwitch.IsToggled = isOn;
+
+            _updatingBluetoothSwitch = false;
+        }
+
+        private async void OnBluetoothSwitchToggled(
+            object? sender,
+            ToggledEventArgs e)
+        {
+            if (_updatingBluetoothSwitch)
+                return;
+
+            // Restauramos inmediatamente el estado REAL.
+            UpdateBluetoothSwitch(_bluetoothIsOn);
+
+            if (!_bluetoothIsOn)
+            {
+                // Bluetooth está apagado:
+                // solicitar que Android lo active.
+                await RequestEnableBluetoothAsync();
+            }
+            else
+            {
+                // Bluetooth está encendido:
+                // mandar al usuario a los ajustes para apagarlo manualmente.
+                await RequestDisableBluetoothAsync();
+            }
+        }
+
+        private async Task RequestEnableBluetoothAsync()
+        {
+#if ANDROID
+            if (OperatingSystem.IsAndroidVersionAtLeast(31))
+            {
+                var activity = Platform.CurrentActivity;
+
+                if (activity is null)
+                    return;
+
+                var intent = new Android.Content.Intent(
+                    Android.Bluetooth.BluetoothAdapter.ActionRequestEnable);
+
+                activity.StartActivity(intent);
+
+                return;
+            }
+#endif
+
+            await DisplayAlertAsync(
+                "Bluetooth",
+                "Activa Bluetooth desde la configuración del dispositivo.",
+                "OK");
+        }
+
+        private async Task RequestDisableBluetoothAsync()
+        {
+#if ANDROID
+            await MainThread.InvokeOnMainThreadAsync(() =>
+            {
+                var intent = new Android.Content.Intent(
+                    Android.Provider.Settings.ActionBluetoothSettings);
+
+                Platform.CurrentActivity?.StartActivity(intent);
+            });
+#else
+    await DisplayAlertAsync(
+        "Bluetooth",
+        "Desactiva Bluetooth desde la configuración del dispositivo.",
+        "OK");
+#endif
         }
 
         private bool _isConnected;

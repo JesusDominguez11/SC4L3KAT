@@ -12,25 +12,30 @@
         Spacing="20">
 
             <Label
-            Text="SC4L3K4T"
-            FontSize="32"
-            HorizontalOptions="Center" />
+    Text="SC4L3K4T"
+    FontSize="32"
+    HorizontalOptions="Center" />
 
-            <Label
-            x:Name="BluetoothStatusLabel"
-            Text="Bluetooth: Desconectado"
-            FontSize="18"
-            HorizontalOptions="Center" />
+            <HorizontalStackLayout
+                HorizontalOptions="Center"
+                Spacing="15">
+
+                <Label
+                    x:Name="BluetoothStatusLabel"
+                    FontSize="18"
+                    VerticalOptions="Center" />
+
+                <Switch
+                    x:Name="BluetoothSwitch"
+                    IsToggled="False"
+                    Toggled="OnBluetoothSwitchToggled" />
+
+            </HorizontalStackLayout>
 
             <ActivityIndicator
             x:Name="ScanActivityIndicator"
             IsRunning="False"
             IsVisible="False" />
-
-            <!--<Button x:Name="ScanButton" 
-            BackgroundColor="White"
-            Text="Escanear BLE"
-            Clicked="OnScanClicked"/>-->
 
             <Label
                 Text="Dispositivos encontrados"
