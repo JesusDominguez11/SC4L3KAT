@@ -26,12 +26,14 @@ public partial class DevicePage : ContentPage
             DeviceStatusLabel.Text = "Estado: Conectado";
 
             LedButton.IsEnabled = true;
+            HeadlightsButton.IsEnabled = true;
         }
         else
         {
             DeviceStatusLabel.Text = "Estado: Desconectado";
             
             LedButton.IsEnabled = false;
+            HeadlightsButton.IsEnabled = false;
         }
 
         if (_deviceControl.IsLedOn.HasValue)
@@ -45,6 +47,19 @@ public partial class DevicePage : ContentPage
         {
             LedStatusLabel.Text =
                 "LED: Desconocido";
+        }
+
+        if (_deviceControl.AreHeadlightsOn.HasValue)
+        {
+            HeadlightsButton.Text =
+                _deviceControl.AreHeadlightsOn.Value
+                    ? "Luces: Encendidas"
+                    : "Luces: Apagadas";
+        }
+        else
+        {
+            HeadlightsButton.Text =
+                "Luces: Desconocidas";
         }
     }
 
@@ -92,6 +107,29 @@ public partial class DevicePage : ContentPage
         }
     }
 
+    private async void OnHeadlightsButtonClicked(
+    object sender,
+    EventArgs e)
+    {
+        if (!_deviceControl.IsDeviceConnected)
+            return;
+
+        try
+        {
+            var newState =
+                !_deviceControl.AreHeadlightsOn.GetValueOrDefault();
+
+            await _deviceControl.SetHeadlightsAsync(newState);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
     private void OnDeviceMessageReceived(
     object? sender,
     string message)
@@ -108,7 +146,11 @@ public partial class DevicePage : ContentPage
                     LedStatusLabel.Text =
                         "LED: Desconocido";
 
+                    HeadlightsButton.Text =
+                        "Luces: Desconocidas";
+
                     LedButton.IsEnabled = false;
+                    HeadlightsButton.IsEnabled = false;
 
                     break;
 
@@ -116,6 +158,7 @@ public partial class DevicePage : ContentPage
                     DeviceStatusLabel.Text = "Pico conectada";
 
                     LedButton.IsEnabled = true;
+                    HeadlightsButton.IsEnabled = true;
                     break;
 
                 case DeviceCommands.LedOn:
@@ -124,6 +167,20 @@ public partial class DevicePage : ContentPage
 
                 case DeviceCommands.LedOff:
                     LedStatusLabel.Text = "LED: Apagado";
+                    break;
+
+                case DeviceCommands.HeadlightsOn:
+
+                    HeadlightsButton.Text =
+                        "Luces: Encendidas";
+
+                    break;
+
+                case DeviceCommands.HeadlightsOff:
+
+                    HeadlightsButton.Text =
+                        "Luces: Apagadas";
+
                     break;
             }
         });

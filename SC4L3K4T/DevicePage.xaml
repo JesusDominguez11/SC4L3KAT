@@ -45,6 +45,12 @@
                 Pressed="OnLedButtonPressed"
                 Released="OnLedButtonReleased" />
 
+            <Button
+    x:Name="HeadlightsButton"
+    Text="Luces: Apagadas"
+    IsEnabled="False"
+    Clicked="OnHeadlightsButtonClicked" />
+
         </VerticalStackLayout>
 
     </ScrollView>

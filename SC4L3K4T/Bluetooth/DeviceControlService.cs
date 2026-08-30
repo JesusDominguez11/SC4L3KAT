@@ -57,6 +57,7 @@ namespace SC4L3K4T.Bluetooth
         public string? LastMessage { get; private set; }
         public bool? IsLedOn { get; private set; }
         public bool IsDeviceConnected { get; private set; }
+        public bool? AreHeadlightsOn { get; private set; }
 
         private void OnDataReceived(byte[] data)
         {
@@ -77,6 +78,14 @@ namespace SC4L3K4T.Bluetooth
                 case DeviceCommands.LedOff:
                     IsLedOn = false;
                     break;
+
+                case DeviceCommands.HeadlightsOn:
+                    AreHeadlightsOn = true;
+                    break;
+
+                case DeviceCommands.HeadlightsOff:
+                    AreHeadlightsOn = false;
+                    break;
             }
 
             DeviceMessageReceived?.Invoke(
@@ -92,6 +101,24 @@ namespace SC4L3K4T.Bluetooth
             var command = isOn
                 ? DeviceCommands.LedOn
                 : DeviceCommands.LedOff;
+
+            var data = Encoding.UTF8.GetBytes(command);
+
+            await _bluetoothService.WriteAsync(
+                _device,
+                BleConstants.ScaleCarServiceUuid,
+                BleConstants.TestCharacteristicUuid,
+                data);
+        }
+
+        public async Task SetHeadlightsAsync(bool isOn)
+        {
+            if (!IsDeviceConnected)
+                return;
+
+            var command = isOn
+                ? DeviceCommands.HeadlightsOn
+                : DeviceCommands.HeadlightsOff;
 
             var data = Encoding.UTF8.GetBytes(command);
 
