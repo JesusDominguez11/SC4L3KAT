@@ -20,11 +20,24 @@
                 x:Name="DeviceIdLabel"
                 FontSize="13"
                 HorizontalOptions="Center" />
+            
 
             <Label
                 Text="Controles"
                 FontSize="22"
                 FontAttributes="Bold" />
+
+            <Label
+    x:Name="DeviceStatusLabel"
+    Text="Estado: Conectando..."
+    FontSize="18"
+    HorizontalOptions="Center" />
+
+            <Label
+    x:Name="LedStatusLabel"
+    Text="LED: Desconocido"
+    FontSize="18"
+    HorizontalOptions="Center" />
 
             <Button
                 x:Name="LedButton"

@@ -18,6 +18,8 @@ namespace SC4L3K4T
     public partial class MainPage : ContentPage
     {        
         private readonly IBluetoothService _bluetoothService;
+        private DeviceControlService? _deviceControlService;
+
         public MainPage()
         {
             InitializeComponent();
@@ -187,8 +189,7 @@ namespace SC4L3K4T
 
                     await Navigation.PushAsync(
                         new DevicePage(
-                            _bluetoothService,
-                            _connectedDevice));
+                            _deviceControlService));
                 };
 
                 var connectButton = new Button
@@ -227,6 +228,10 @@ namespace SC4L3K4T
                         }
 
                         await _bluetoothService.ConnectAsync(deviceInfo);
+
+                        _deviceControlService = new DeviceControlService(_bluetoothService, deviceInfo);
+
+                        await _deviceControlService.StartAsync();
 
                         _isConnected = true;
                         _connectedDevice = deviceInfo;
@@ -411,32 +416,32 @@ namespace SC4L3K4T
         Button? connectedButton = null;
         Button? connectedDevicePageButton = null;
 
-        private async void OnLedButtonPressed(object sender, EventArgs e)
-        {
-            if (!_isConnected || _connectedDevice is null)
-                return;
+        //private async void OnLedButtonPressed(object sender, EventArgs e)
+        //{
+        //    if (!_isConnected || _connectedDevice is null)
+        //        return;
 
-            var data = System.Text.Encoding.UTF8.GetBytes("LED_ON");
+        //    var data = System.Text.Encoding.UTF8.GetBytes("LED_ON");
 
-            await _bluetoothService.WriteAsync(
-                _connectedDevice,
-                BleConstants.ScaleCarServiceUuid,
-                BleConstants.TestCharacteristicUuid,
-                data);
-        }
+        //    await _bluetoothService.WriteAsync(
+        //        _connectedDevice,
+        //        BleConstants.ScaleCarServiceUuid,
+        //        BleConstants.TestCharacteristicUuid,
+        //        data);
+        //}
 
-        private async void OnLedButtonReleased(object sender, EventArgs e)
-        {
-            if (!_isConnected || _connectedDevice is null)
-                return;
+        //private async void OnLedButtonReleased(object sender, EventArgs e)
+        //{
+        //    if (!_isConnected || _connectedDevice is null)
+        //        return;
 
-            var data = System.Text.Encoding.UTF8.GetBytes("LED_OFF");
+        //    var data = System.Text.Encoding.UTF8.GetBytes("LED_OFF");
 
-            await _bluetoothService.WriteAsync(
-                _connectedDevice,
-                BleConstants.ScaleCarServiceUuid,
-                BleConstants.TestCharacteristicUuid,
-                data);
-        }
+        //    await _bluetoothService.WriteAsync(
+        //        _connectedDevice,
+        //        BleConstants.ScaleCarServiceUuid,
+        //        BleConstants.TestCharacteristicUuid,
+        //        data);
+        //}
     }
 }
