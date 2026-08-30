@@ -6,19 +6,16 @@ namespace SC4L3K4T;
 
 public partial class DevicePage : ContentPage
 {
-    private readonly IBluetoothService _bluetoothService;
-    private readonly BleDeviceInfo _device;
+    private readonly DeviceControlService _deviceControl;
 
-    public DevicePage(IBluetoothService bluetoothService,
-        BleDeviceInfo device)
+    public DevicePage(IBluetoothService bluetoothService, BleDeviceInfo device)
 	{
 		InitializeComponent();
 
-        _bluetoothService = bluetoothService;
-        _device = device;
+        DeviceNameLabel.Text = device.Name;
+        DeviceIdLabel.Text = device.Id.ToString();
 
-        DeviceNameLabel.Text = _device.Name;
-        DeviceIdLabel.Text = _device.Id.ToString();
+        _deviceControl = new DeviceControlService(bluetoothService, device);
     }
 
     private async void OnLedButtonPressed(
@@ -27,13 +24,7 @@ public partial class DevicePage : ContentPage
     {
         try
         {
-            var data = Encoding.UTF8.GetBytes("LED_ON");
-
-            await _bluetoothService.WriteAsync(
-                _device,
-                BleConstants.ScaleCarServiceUuid,
-                BleConstants.TestCharacteristicUuid,
-                data);
+            await _deviceControl.SetLedAsync(true);
         }
         catch (Exception ex)
         {
@@ -50,13 +41,7 @@ public partial class DevicePage : ContentPage
     {
         try
         {
-            var data = Encoding.UTF8.GetBytes("LED_OFF");
-
-            await _bluetoothService.WriteAsync(
-                _device,
-                BleConstants.ScaleCarServiceUuid,
-                BleConstants.TestCharacteristicUuid,
-                data);
+            await _deviceControl.SetLedAsync(false);
         }
         catch (Exception ex)
         {

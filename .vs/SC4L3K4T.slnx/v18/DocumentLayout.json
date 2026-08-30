@@ -3,20 +3,20 @@
   "WorkspaceRootPath": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\roman\\source\\repos\\sc4l3kat\\sc4l3k4t\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\app.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\roman\\source\\repos\\sc4l3kat\\sc4l3k4t\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\roman\\source\\repos\\sc4l3kat\\sc4l3k4t\\devicepage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|",
       "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\devicepage.xaml.cs||{8B382828-6202-11D1-8870-0000F87579D2}|"
     },
     {
       "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\roman\\source\\repos\\sc4l3kat\\sc4l3k4t\\devicepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
       "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\devicepage.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\roman\\source\\repos\\sc4l3kat\\sc4l3k4t\\bluetooth\\devicecontrolservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\bluetooth\\devicecontrolservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\roman\\source\\repos\\sc4l3kat\\sc4l3k4t\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|solutionrelative:sc4l3k4t\\mainpage.xaml.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{312BAE70-67CE-99F6-0B20-EB2C5D2BC307}|SC4L3K4T\\SC4L3K4T.csproj|c:\\users\\roman\\source\\repos\\sc4l3kat\\sc4l3k4t\\bluetooth\\bluetoothservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -34,7 +34,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 4,
           "Children": [
             {
               "$type": "Document",
@@ -51,7 +51,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "MainPage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\MainPage.xaml.cs",
               "RelativeDocumentMoniker": "SC4L3K4T\\MainPage.xaml.cs",
@@ -60,8 +60,7 @@
               "ViewState": "AgIAAPQAAAAAAAAAAADwvw0BAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-27T23:25:09.961Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -78,7 +77,7 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 1,
               "Title": "DevicePage.xaml",
               "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\DevicePage.xaml",
               "RelativeDocumentMoniker": "SC4L3K4T\\DevicePage.xaml",
@@ -92,13 +91,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 0,
               "Title": "DevicePage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\DevicePage.xaml.cs",
               "RelativeDocumentMoniker": "SC4L3K4T\\DevicePage.xaml.cs",
               "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\DevicePage.xaml.cs",
               "RelativeToolTip": "SC4L3K4T\\DevicePage.xaml.cs",
-              "ViewState": "AgIAABsAAAAAAAAAAAAUwDMAAAAJAAAAAAAAAA==",
+              "ViewState": "AgIAABMAAAAAAAAAAAAQwDMAAAAJAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-29T23:05:51.496Z",
               "IsPinned": true,
@@ -106,15 +105,16 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "App.xaml.cs",
-              "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\App.xaml.cs",
-              "RelativeDocumentMoniker": "SC4L3K4T\\App.xaml.cs",
-              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\App.xaml.cs",
-              "RelativeToolTip": "SC4L3K4T\\App.xaml.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAOAAAAAAAAAA==",
+              "DocumentIndex": 2,
+              "Title": "DeviceControlService.cs",
+              "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\Bluetooth\\DeviceControlService.cs",
+              "RelativeDocumentMoniker": "SC4L3K4T\\Bluetooth\\DeviceControlService.cs",
+              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\Bluetooth\\DeviceControlService.cs",
+              "RelativeToolTip": "SC4L3K4T\\Bluetooth\\DeviceControlService.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-29T23:13:48.779Z",
+              "WhenOpened": "2026-08-30T00:23:20.092Z",
+              "IsPinned": true,
               "EditorCaption": ""
             }
           ]
