@@ -21,9 +21,17 @@ public partial class DevicePage : ContentPage
 
     private void UpdateInitialState()
     {
-        if (_deviceControl.LastMessage == "PICO_CONNECTED")
+        if (_deviceControl.IsDeviceConnected)
         {
             DeviceStatusLabel.Text = "Estado: Conectado";
+        }
+
+        if (_deviceControl.IsLedOn.HasValue)
+        {
+            LedStatusLabel.Text =
+                _deviceControl.IsLedOn.Value
+                    ? "LED: Encendido"
+                    : "LED: Apagado";
         }
     }
 

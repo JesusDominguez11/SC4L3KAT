@@ -42,13 +42,12 @@
               "Title": "MainPage.xaml",
               "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\MainPage.xaml",
               "RelativeDocumentMoniker": "SC4L3K4T\\MainPage.xaml",
-              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\MainPage.xaml*",
-              "RelativeToolTip": "SC4L3K4T\\MainPage.xaml*",
+              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\MainPage.xaml",
+              "RelativeToolTip": "SC4L3K4T\\MainPage.xaml",
               "ViewState": "AgIAABIAAAAAAAAAAAAAADUAAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-08-27T23:25:09.286Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -56,13 +55,12 @@
               "Title": "MainPage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\MainPage.xaml.cs",
               "RelativeDocumentMoniker": "SC4L3K4T\\MainPage.xaml.cs",
-              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\MainPage.xaml.cs*",
-              "RelativeToolTip": "SC4L3K4T\\MainPage.xaml.cs*",
+              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\MainPage.xaml.cs",
+              "RelativeToolTip": "SC4L3K4T\\MainPage.xaml.cs",
               "ViewState": "AgIAAKIAAAAAAAAAAAAiwL4AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-27T23:25:09.961Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -88,8 +86,7 @@
               "ViewState": "AgIAAAAAAAAAAAAAAAAAACcAAAAhAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
               "WhenOpened": "2026-08-29T23:05:23.236Z",
-              "IsPinned": true,
-              "EditorCaption": ""
+              "IsPinned": true
             },
             {
               "$type": "Document",
@@ -97,9 +94,9 @@
               "Title": "DevicePage.xaml.cs",
               "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\DevicePage.xaml.cs",
               "RelativeDocumentMoniker": "SC4L3K4T\\DevicePage.xaml.cs",
-              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\DevicePage.xaml.cs*",
-              "RelativeToolTip": "SC4L3K4T\\DevicePage.xaml.cs*",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABsAAAAFAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\DevicePage.xaml.cs",
+              "RelativeToolTip": "SC4L3K4T\\DevicePage.xaml.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-29T23:05:51.496Z",
               "IsPinned": true,
@@ -111,9 +108,9 @@
               "Title": "DeviceControlService.cs",
               "DocumentMoniker": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\Bluetooth\\DeviceControlService.cs",
               "RelativeDocumentMoniker": "SC4L3K4T\\Bluetooth\\DeviceControlService.cs",
-              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\Bluetooth\\DeviceControlService.cs*",
-              "RelativeToolTip": "SC4L3K4T\\Bluetooth\\DeviceControlService.cs*",
-              "ViewState": "AgIAABYAAAAAAAAAAAAQwDUAAAAiAAAAAAAAAA==",
+              "ToolTip": "C:\\Users\\roman\\source\\repos\\SC4L3KAT\\SC4L3K4T\\Bluetooth\\DeviceControlService.cs",
+              "RelativeToolTip": "SC4L3K4T\\Bluetooth\\DeviceControlService.cs",
+              "ViewState": "AgIAACgAAAAAAAAAAAAQwEYAAAANAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-08-30T00:23:20.092Z",
               "IsPinned": true,
