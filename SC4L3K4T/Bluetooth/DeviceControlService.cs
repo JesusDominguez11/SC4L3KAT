@@ -21,8 +21,8 @@ namespace SC4L3K4T.Bluetooth
         public async Task SetLedAsync(bool isOn)
         {
             var command = isOn
-                ? "LED_ON"
-                : "LED_OFF";
+                ? DeviceCommands.LedOn
+                : DeviceCommands.LedOff;
 
             var data = Encoding.UTF8.GetBytes(command);
 

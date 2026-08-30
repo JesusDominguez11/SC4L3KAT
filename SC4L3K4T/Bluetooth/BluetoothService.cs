@@ -13,6 +13,7 @@ namespace SC4L3K4T.Bluetooth
         public event EventHandler<BleDeviceInfo>? DeviceDiscovered;
         public event EventHandler<BluetoothStateChangedArgs>? BluetoothStateChanged;
         private bool _isScanning;
+        private readonly Dictionary<Guid, EventHandler<CharacteristicUpdatedEventArgs>> _notificationHandlers = new();
 
         public BluetoothService()
         {
@@ -162,6 +163,76 @@ namespace SC4L3K4T.Bluetooth
         public async Task DisconnectAsync(BleDeviceInfo deviceInfo)
         {
             await _adapter.DisconnectDeviceAsync(deviceInfo.Device);
+        }
+
+        public async Task StartNotificationsAsync(
+            BleDeviceInfo deviceInfo,
+            Guid serviceUuid,
+            Guid characteristicUuid,
+            Action<byte[]> onDataReceived)
+        {
+            var service = await deviceInfo.Device.GetServiceAsync(serviceUuid);
+
+            if (service == null)
+            {
+                throw new InvalidOperationException(
+                    "No se encontró el servicio BLE.");
+            }
+
+            var characteristic =
+                await service.GetCharacteristicAsync(characteristicUuid);
+
+            if (characteristic == null)
+            {
+                throw new InvalidOperationException(
+                    "No se encontró la característica BLE.");
+            }
+
+            if (_notificationHandlers.ContainsKey(characteristic.Id))
+                return;
+
+            EventHandler<CharacteristicUpdatedEventArgs> handler =
+                (_, args) =>
+                {
+                    onDataReceived(args.Characteristic.Value);
+                };
+
+            _notificationHandlers.Add(
+                characteristic.Id,
+                handler);
+
+            characteristic.ValueUpdated += handler;
+
+            await characteristic.StartUpdatesAsync();
+        }
+
+        public async Task StopNotificationsAsync(
+            BleDeviceInfo deviceInfo,
+            Guid serviceUuid,
+            Guid characteristicUuid)
+        {
+            var service = await deviceInfo.Device.GetServiceAsync(serviceUuid);
+
+            if (service == null)
+                return;
+
+            var characteristic =
+                await service.GetCharacteristicAsync(characteristicUuid);
+
+            if (characteristic == null)
+                return;
+
+            if (_notificationHandlers.TryGetValue(
+                characteristic.Id,
+                out var handler))
+            {
+                characteristic.ValueUpdated -= handler;
+
+                _notificationHandlers.Remove(
+                    characteristic.Id);
+            }
+
+            await characteristic.StopUpdatesAsync();
         }
     }
 }

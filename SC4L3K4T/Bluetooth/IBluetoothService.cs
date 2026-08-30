@@ -28,5 +28,16 @@ namespace SC4L3K4T.Bluetooth
             byte[] data);
 
         Task DisconnectAsync(BleDeviceInfo deviceInfo);
+
+        Task StartNotificationsAsync(
+            BleDeviceInfo deviceInfo,
+            Guid serviceUuid,
+            Guid characteristicUuid,
+            Action<byte[]> onDataReceived);
+
+        Task StopNotificationsAsync(
+            BleDeviceInfo deviceInfo,
+            Guid serviceUuid,
+            Guid characteristicUuid);
     }
 }
