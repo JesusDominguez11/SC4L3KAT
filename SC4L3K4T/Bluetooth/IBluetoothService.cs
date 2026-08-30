@@ -11,6 +11,7 @@ namespace SC4L3K4T.Bluetooth
     {
         event EventHandler<BleDeviceInfo>? DeviceDiscovered;
         event EventHandler<BluetoothStateChangedArgs>? BluetoothStateChanged;
+        event EventHandler<BleDeviceInfo>? DeviceDisconnected;
 
         Task ScanAsync();
 

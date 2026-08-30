@@ -18,6 +18,8 @@ namespace SC4L3K4T.Bluetooth
         {
             _bluetoothService = bluetoothService;
             _device = device;
+
+            _bluetoothService.DeviceDisconnected += OnDeviceDisconnected;
         }
 
         public async Task StartAsync()
@@ -27,6 +29,12 @@ namespace SC4L3K4T.Bluetooth
                 BleConstants.ScaleCarServiceUuid,
                 BleConstants.TestCharacteristicUuid,
                 OnDataReceived);
+
+            IsDeviceConnected = true;
+
+            DeviceMessageReceived?.Invoke(
+                this,
+                "PICO_CONNECTED");
 
             var data = Encoding.UTF8.GetBytes(
                 DeviceCommands.Subscribe);
@@ -49,6 +57,7 @@ namespace SC4L3K4T.Bluetooth
         public string? LastMessage { get; private set; }
         public bool? IsLedOn { get; private set; }
         public bool IsDeviceConnected { get; private set; }
+
         private void OnDataReceived(byte[] data)
         {
             var message = Encoding.UTF8.GetString(data);
@@ -77,6 +86,9 @@ namespace SC4L3K4T.Bluetooth
 
         public async Task SetLedAsync(bool isOn)
         {
+            if (!IsDeviceConnected)
+                return;
+
             var command = isOn
                 ? DeviceCommands.LedOn
                 : DeviceCommands.LedOff;
@@ -88,6 +100,20 @@ namespace SC4L3K4T.Bluetooth
                 BleConstants.ScaleCarServiceUuid,
                 BleConstants.TestCharacteristicUuid,
                 data);
+        }
+
+        private void OnDeviceDisconnected(
+    object? sender,
+    BleDeviceInfo deviceInfo)
+        {
+            if (deviceInfo.Id != _device.Id)
+                return;
+
+            IsDeviceConnected = false;
+
+            DeviceMessageReceived?.Invoke(
+                this,
+                "PICO_DISCONNECTED");
         }
     }
 }

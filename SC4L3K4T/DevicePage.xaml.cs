@@ -24,6 +24,14 @@ public partial class DevicePage : ContentPage
         if (_deviceControl.IsDeviceConnected)
         {
             DeviceStatusLabel.Text = "Estado: Conectado";
+
+            LedButton.IsEnabled = true;
+        }
+        else
+        {
+            DeviceStatusLabel.Text = "Estado: Desconectado";
+            
+            LedButton.IsEnabled = false;
         }
 
         if (_deviceControl.IsLedOn.HasValue)
@@ -33,38 +41,21 @@ public partial class DevicePage : ContentPage
                     ? "LED: Encendido"
                     : "LED: Apagado";
         }
+        else
+        {
+            LedStatusLabel.Text =
+                "LED: Desconocido";
+        }
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
-
-        //try
-        //{
-        //    await _deviceControl.StartAsync();
-        //}
-        //catch (Exception ex)
-        //{
-        //    await DisplayAlertAsync(
-        //        "Bluetooth",
-        //        ex.Message,
-        //        "OK");
-        //}
     }
 
     protected override async void OnDisappearing()
     {
         base.OnDisappearing();
-
-        //try
-        //{
-        //    await _deviceControl.StopAsync();
-        //}
-        //catch
-        //{
-        //    // El dispositivo puede haberse desconectado
-        //    // mientras salíamos de la página.
-        //}
     }
 
     private async void OnLedButtonPressed(
@@ -109,15 +100,29 @@ public partial class DevicePage : ContentPage
         {
             switch (message)
             {
-                case "PICO_CONNECTED":
-                    DeviceStatusLabel.Text = "Pico conectada";
+                case "PICO_DISCONNECTED":
+
+                    DeviceStatusLabel.Text =
+                        "Estado: Desconectado";
+
+                    LedStatusLabel.Text =
+                        "LED: Desconocido";
+
+                    LedButton.IsEnabled = false;
+
                     break;
 
-                case "LED_ON":
+                case "PICO_CONNECTED":
+                    DeviceStatusLabel.Text = "Pico conectada";
+
+                    LedButton.IsEnabled = true;
+                    break;
+
+                case DeviceCommands.LedOn:
                     LedStatusLabel.Text = "LED: Encendido";
                     break;
 
-                case "LED_OFF":
+                case DeviceCommands.LedOff:
                     LedStatusLabel.Text = "LED: Apagado";
                     break;
             }

@@ -12,6 +12,8 @@ namespace SC4L3K4T.Bluetooth
         private readonly IAdapter _adapter;
         public event EventHandler<BleDeviceInfo>? DeviceDiscovered;
         public event EventHandler<BluetoothStateChangedArgs>? BluetoothStateChanged;
+        private BleDeviceInfo? _connectedDevice;
+        public event EventHandler<BleDeviceInfo>? DeviceDisconnected;
         private bool _isScanning;
         private readonly Dictionary<Guid, EventHandler<CharacteristicUpdatedEventArgs>> _notificationHandlers = new();
 
@@ -21,6 +23,8 @@ namespace SC4L3K4T.Bluetooth
             _adapter = CrossBluetoothLE.Current.Adapter;
 
             _bluetooth.StateChanged += OnBluetoothStateChanged;
+            _adapter.DeviceDisconnected += OnDeviceDisconnected;
+            _adapter.DeviceConnectionLost += OnDeviceDisconnected;
         }
 
         public async Task ScanAsync()
@@ -85,25 +89,57 @@ namespace SC4L3K4T.Bluetooth
             }
         }
 
-        private void OnBluetoothStateChanged(
+        private void OnDeviceDisconnected(
     object? sender,
-    BluetoothStateChangedArgs e)
+    DeviceEventArgs e)
+        {
+            var deviceInfo = new BleDeviceInfo
+            {
+                Device = e.Device
+            };
+
+            NotifyDeviceDisconnected(deviceInfo);
+        }
+
+        private void OnBluetoothStateChanged(
+            object? sender,
+            BluetoothStateChangedArgs e)
         {
             if (e.NewState != BluetoothState.On)
             {
                 _isScanning = false;
+
+                if (_connectedDevice is not null)
+                {
+                    NotifyDeviceDisconnected(_connectedDevice);
+                }
             }
 
-            BluetoothStateChanged?.Invoke(this, e);
+            BluetoothStateChanged?.Invoke(
+                this,
+                e);
         }
 
         public async Task ConnectAsync(BleDeviceInfo deviceInfo)
         {
+            if (_connectedDevice is not null &&
+                _connectedDevice.Id != deviceInfo.Id)
+            {
+                var previousDevice = _connectedDevice;
+
+                await _adapter.DisconnectDeviceAsync(
+                    previousDevice.Device);
+
+                NotifyDeviceDisconnected(previousDevice);
+            }
+
             await _adapter.ConnectToDeviceAsync(
                 deviceInfo.Device,
                 new ConnectParameters(
                     autoConnect: false,
                     forceBleTransport: true));
+
+            _connectedDevice = deviceInfo;
         }
 
         public async Task<byte[]> ReadAsync(
@@ -162,7 +198,10 @@ namespace SC4L3K4T.Bluetooth
 
         public async Task DisconnectAsync(BleDeviceInfo deviceInfo)
         {
-            await _adapter.DisconnectDeviceAsync(deviceInfo.Device);
+            await _adapter.DisconnectDeviceAsync(
+                deviceInfo.Device);
+
+            NotifyDeviceDisconnected(deviceInfo);
         }
 
         public async Task StartNotificationsAsync(
@@ -233,6 +272,18 @@ namespace SC4L3K4T.Bluetooth
             }
 
             await characteristic.StopUpdatesAsync();
+        }
+
+        private void NotifyDeviceDisconnected(BleDeviceInfo deviceInfo)
+        {
+            if (_connectedDevice?.Id != deviceInfo.Id)
+                return;
+
+            _connectedDevice = null;
+
+            DeviceDisconnected?.Invoke(
+                this,
+                deviceInfo);
         }
     }
 }
