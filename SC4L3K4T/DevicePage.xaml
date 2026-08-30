@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SC4L3K4T.DevicePage"
+             Title="DevicePage">
+    <ScrollView>
+
+        <VerticalStackLayout
+            Padding="30"
+            Spacing="20">
+
+            <Label
+                x:Name="DeviceNameLabel"
+                Text="SC4L3K4T"
+                FontSize="32"
+                FontAttributes="Bold"
+                HorizontalOptions="Center" />
+
+            <Label
+                x:Name="DeviceIdLabel"
+                FontSize="13"
+                HorizontalOptions="Center" />
+
+            <Label
+                Text="Controles"
+                FontSize="22"
+                FontAttributes="Bold" />
+
+            <Button
+                x:Name="LedButton"
+                Text="Mantener para encender LED"
+                Pressed="OnLedButtonPressed"
+                Released="OnLedButtonReleased" />
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+</ContentPage>

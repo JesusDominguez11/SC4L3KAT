@@ -73,4 +73,10 @@
         <PackageReference Include="Plugin.BLE" Version="3.2.1" />
     </ItemGroup>
 
+    <ItemGroup>
+      <MauiXaml Update="DevicePage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </MauiXaml>
+    </ItemGroup>
+
 </Project>

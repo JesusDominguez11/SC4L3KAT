@@ -9,7 +9,11 @@
 
         protected override Window CreateWindow(IActivationState? activationState)
         {
-            return new Window(new MainPage()) { Title = "SC4L3K4T" };
+            return new Window(
+        new NavigationPage(new MainPage()))
+            {
+                Title = "SC4L3K4T"
+            };
         }
     }
 }

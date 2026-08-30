@@ -81,7 +81,13 @@ namespace SC4L3K4T
                 connectedButton.Text = "Conectar";
             }
 
+            if (connectedDevicePageButton is not null)
+            {
+                connectedDevicePageButton.IsEnabled = false;
+            }
+
             connectedButton = null;
+            connectedDevicePageButton = null;
         }
 
         private async Task StartBluetoothScanAsync()
@@ -162,6 +168,29 @@ namespace SC4L3K4T
     deviceInfo.Id,
     rssiLabelNew);
 
+                var devicePageButton = new Button
+                {
+                    Text = "→",
+                    FontSize = 24,
+                    WidthRequest = 60,
+                    IsEnabled = false
+                };
+
+                devicePageButton.Clicked += async (_, _) =>
+                {
+                    if (!_isConnected ||
+                        _connectedDevice is null ||
+                        _connectedDevice.Id != deviceInfo.Id)
+                    {
+                        return;
+                    }
+
+                    await Navigation.PushAsync(
+                        new DevicePage(
+                            _bluetoothService,
+                            _connectedDevice));
+                };
+
                 var connectButton = new Button
                 {
                     Text = "Conectar",
@@ -201,9 +230,13 @@ namespace SC4L3K4T
 
                         _isConnected = true;
                         _connectedDevice = deviceInfo;
+                        
                         connectedButton = connectButton;
-
+                        connectedDevicePageButton = devicePageButton;
+                        
                         connectButton.Text = "Desconectar";
+
+                        devicePageButton.IsEnabled = true;
 
                         await DisplayAlertAsync(
                             "Conectado",
@@ -229,8 +262,16 @@ namespace SC4L3K4T
                 deviceLayout.Children.Add(nameLabel);
                 deviceLayout.Children.Add(idLabel);
                 deviceLayout.Children.Add(rssiLabelNew);
-                deviceLayout.Children.Add(connectButton);
 
+                var buttonsLayout = new HorizontalStackLayout
+                {
+                    Spacing = 10
+                };
+
+                buttonsLayout.Children.Add(connectButton);
+                buttonsLayout.Children.Add(devicePageButton);
+
+                deviceLayout.Children.Add(buttonsLayout);
                 DevicesLayout.Children.Add(deviceLayout);
             });
         }
@@ -366,8 +407,10 @@ namespace SC4L3K4T
 
         private bool _isConnected;
         private BleDeviceInfo? _connectedDevice;
+
         Button? connectedButton = null;
-    
+        Button? connectedDevicePageButton = null;
+
         private async void OnLedButtonPressed(object sender, EventArgs e)
         {
             if (!_isConnected || _connectedDevice is null)
