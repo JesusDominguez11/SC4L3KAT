@@ -69,6 +69,13 @@ Clicked="OnRightSignalButtonClicked" />
     IsEnabled="False"
     Clicked="OnHazardsButtonClicked" />
 
+            <Button
+    x:Name="BrakeButton"
+    Text="Mantener para frenar"
+    IsEnabled="False"
+    Pressed="OnBrakeButtonPressed"
+    Released="OnBrakeButtonReleased" />
+
         </VerticalStackLayout>
 
     </ScrollView>

@@ -108,6 +108,22 @@ public partial class DevicePage : ContentPage
             HazardsButton.Text =
                 "Intermitentes: Desconocidas";
         }
+
+        BrakeButton.IsEnabled =
+    _deviceControl.IsDeviceConnected;
+
+        if (_deviceControl.IsBrakeOn.HasValue)
+        {
+            BrakeButton.Text =
+                _deviceControl.IsBrakeOn.Value
+                    ? "Freno: Activado"
+                    : "Mantener para frenar";
+        }
+        else
+        {
+            BrakeButton.Text =
+                "Freno: Desconocido";
+        }
     }
 
     protected override async void OnAppearing()
@@ -246,6 +262,41 @@ public partial class DevicePage : ContentPage
         }
     }
 
+    private async void OnBrakeButtonPressed(
+    object sender,
+    EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetBrakeAsync(true);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
+
+    private async void OnBrakeButtonReleased(
+        object sender,
+        EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetBrakeAsync(false);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
     private void OnDeviceMessageReceived(
     object? sender,
     string message)
@@ -283,6 +334,11 @@ public partial class DevicePage : ContentPage
 
                     HazardsButton.IsEnabled = false;
 
+                    BrakeButton.IsEnabled = false;
+
+                    BrakeButton.Text =
+                        "Freno: Desconocido";
+
                     break;
 
                 case "PICO_CONNECTED":
@@ -293,6 +349,7 @@ public partial class DevicePage : ContentPage
                     LeftSignalButton.IsEnabled = true;
                     RightSignalButton.IsEnabled = true;
                     HazardsButton.IsEnabled = true;
+                    BrakeButton.IsEnabled = true;
                     break;
 
                 case DeviceCommands.LedOn:
@@ -356,6 +413,20 @@ public partial class DevicePage : ContentPage
 
                     HazardsButton.Text =
                         "Intermitentes: Apagadas";
+
+                    break;
+
+                case DeviceCommands.BrakeOn:
+
+                    BrakeButton.Text =
+                        "Freno: Activado";
+
+                    break;
+
+                case DeviceCommands.BrakeOff:
+
+                    BrakeButton.Text =
+                        "Mantener para frenar";
 
                     break;
             }

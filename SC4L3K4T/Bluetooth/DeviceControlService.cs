@@ -61,6 +61,7 @@ namespace SC4L3K4T.Bluetooth
         public bool? IsLeftSignalOn { get; private set; }
         public bool? IsRightSignalOn { get; private set; }
         public bool? AreHazardsOn { get; private set; }
+        public bool? IsBrakeOn { get; private set; }
 
         private void OnDataReceived(byte[] data)
         {
@@ -112,6 +113,14 @@ namespace SC4L3K4T.Bluetooth
 
                 case DeviceCommands.HazardsOff:
                     AreHazardsOn = false;
+                    break;
+
+                case DeviceCommands.BrakeOn:
+                    IsBrakeOn = true;
+                    break;
+
+                case DeviceCommands.BrakeOff:
+                    IsBrakeOn = false;
                     break;
             }
 
@@ -200,6 +209,24 @@ namespace SC4L3K4T.Bluetooth
             var command = isOn
                 ? DeviceCommands.HazardsOn
                 : DeviceCommands.HazardsOff;
+
+            var data = Encoding.UTF8.GetBytes(command);
+
+            await _bluetoothService.WriteAsync(
+                _device,
+                BleConstants.ScaleCarServiceUuid,
+                BleConstants.TestCharacteristicUuid,
+                data);
+        }
+
+        public async Task SetBrakeAsync(bool isOn)
+        {
+            if (!IsDeviceConnected)
+                return;
+
+            var command = isOn
+                ? DeviceCommands.BrakeOn
+                : DeviceCommands.BrakeOff;
 
             var data = Encoding.UTF8.GetBytes(command);
 

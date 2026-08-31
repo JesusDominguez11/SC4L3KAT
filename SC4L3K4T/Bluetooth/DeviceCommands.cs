@@ -21,5 +21,8 @@ namespace SC4L3K4T.Bluetooth
 
         public const string HazardsOn = "HAZARDS_ON";
         public const string HazardsOff = "HAZARDS_OFF";
+
+        public const string BrakeOn = "BRAKE_ON";
+        public const string BrakeOff = "BRAKE_OFF";
     }
 }
