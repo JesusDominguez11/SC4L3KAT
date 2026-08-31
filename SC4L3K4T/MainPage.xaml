@@ -8,13 +8,13 @@
     <ScrollView>
         
         <VerticalStackLayout
-        Padding="30"
-        Spacing="20">
+            Padding="30"
+            Spacing="20">
 
             <Label
-    Text="SC4L3K4T"
-    FontSize="32"
-    HorizontalOptions="Center" />
+                Text="SC4L3K4T"
+                FontSize="32"
+                HorizontalOptions="Center" />
 
             <HorizontalStackLayout
                 HorizontalOptions="Center"
@@ -29,13 +29,12 @@
                     x:Name="BluetoothSwitch"
                     IsToggled="False"
                     Toggled="OnBluetoothSwitchToggled" />
-
             </HorizontalStackLayout>
 
             <ActivityIndicator
-            x:Name="ScanActivityIndicator"
-            IsRunning="False"
-            IsVisible="False" />
+                x:Name="ScanActivityIndicator"
+                IsRunning="False"
+                IsVisible="False" />
 
             <Label
                 Text="Dispositivos encontrados"
@@ -46,13 +45,6 @@
                 x:Name="DevicesLayout"
                 Spacing="10" />
 
-            <!--<Button
-                x:Name="LedButton"
-                Text="Encender LED"
-                Pressed="OnLedButtonPressed"
-                Released="OnLedButtonReleased"
-                IsEnabled="False" />-->
-
             <BlazorWebView IsVisible="False" x:Name="blazorWebView" HostPage="wwwroot/index.html">
                 <BlazorWebView.RootComponents>
                     <RootComponent Selector="#app" ComponentType="{x:Type components:Routes}" />
@@ -62,6 +54,5 @@
         </VerticalStackLayout>
         
     </ScrollView>
-
 
 </ContentPage>

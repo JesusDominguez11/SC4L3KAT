@@ -9,12 +9,9 @@ namespace SC4L3K4T.Bluetooth
     {
         private readonly IBluetoothService _bluetoothService;
         private readonly BleDeviceInfo _device;
-
         public event EventHandler<string>? DeviceMessageReceived;
 
-        public DeviceControlService(
-            IBluetoothService bluetoothService,
-            BleDeviceInfo device)
+        public DeviceControlService(IBluetoothService bluetoothService, BleDeviceInfo device)
         {
             _bluetoothService = bluetoothService;
             _device = device;
@@ -237,9 +234,7 @@ namespace SC4L3K4T.Bluetooth
                 data);
         }
 
-        private void OnDeviceDisconnected(
-    object? sender,
-    BleDeviceInfo deviceInfo)
+        private void OnDeviceDisconnected(object? sender, BleDeviceInfo deviceInfo)
         {
             if (deviceInfo.Id != _device.Id)
                 return;

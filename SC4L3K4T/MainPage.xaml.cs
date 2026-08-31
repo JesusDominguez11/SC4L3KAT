@@ -4,10 +4,6 @@ using SC4L3K4T.Models;
 using Plugin.BLE.Abstractions.EventArgs;
 using Plugin.BLE;
 
-
-
-
-
 #if ANDROID
 using Android;
 using Android.Content.PM;
@@ -36,7 +32,7 @@ namespace SC4L3K4T
 
             try
             {
-#if ANDROID
+                #if ANDROID
                 if (OperatingSystem.IsAndroidVersionAtLeast(31))
                 {
                     var permission = await Permissions.RequestAsync<Permissions.Bluetooth>();
@@ -51,7 +47,7 @@ namespace SC4L3K4T
                         return;
                     }
                 }
-#endif
+                #endif
 
                 if (CrossBluetoothLE.Current.State == BluetoothState.On)
                 {
@@ -119,9 +115,7 @@ namespace SC4L3K4T
 
         private readonly HashSet<Guid> _discoveredDeviceIds = new();
         private readonly Dictionary<Guid, Label> _deviceRssiLabels = new();
-        private async void OnDeviceDiscovered(
-    object? sender,
-    BleDeviceInfo deviceInfo)
+        private async void OnDeviceDiscovered(object? sender, BleDeviceInfo deviceInfo)
         {
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
@@ -167,8 +161,8 @@ namespace SC4L3K4T
                 };
 
                 _deviceRssiLabels.Add(
-    deviceInfo.Id,
-    rssiLabelNew);
+                    deviceInfo.Id,
+                    rssiLabelNew);
 
                 var devicePageButton = new Button
                 {
@@ -282,9 +276,7 @@ namespace SC4L3K4T
         }
 
         private bool _scanStarted;
-        private async void OnBluetoothStateChanged(
-    object? sender,
-    BluetoothStateChangedArgs e)
+        private async void OnBluetoothStateChanged(object? sender, BluetoothStateChangedArgs e)
         {
             if (e.NewState == BluetoothState.On)
             {
@@ -343,9 +335,7 @@ namespace SC4L3K4T
             _updatingBluetoothSwitch = false;
         }
 
-        private async void OnBluetoothSwitchToggled(
-            object? sender,
-            ToggledEventArgs e)
+        private async void OnBluetoothSwitchToggled(object? sender, ToggledEventArgs e)
         {
             if (_updatingBluetoothSwitch)
                 return;
@@ -355,21 +345,19 @@ namespace SC4L3K4T
 
             if (!_bluetoothIsOn)
             {
-                // Bluetooth está apagado:
-                // solicitar que Android lo active.
+                // Bluetooth está apagado: solicitar que Android lo active.
                 await RequestEnableBluetoothAsync();
             }
             else
             {
-                // Bluetooth está encendido:
-                // mandar al usuario a los ajustes para apagarlo manualmente.
+                // Bluetooth está encendido: mandar al usuario a los ajustes para apagarlo manualmente.
                 await RequestDisableBluetoothAsync();
             }
         }
 
         private async Task RequestEnableBluetoothAsync()
         {
-#if ANDROID
+            #if ANDROID
             if (OperatingSystem.IsAndroidVersionAtLeast(31))
             {
                 var activity = Platform.CurrentActivity;
@@ -384,7 +372,7 @@ namespace SC4L3K4T
 
                 return;
             }
-#endif
+            #endif
 
             await DisplayAlertAsync(
                 "Bluetooth",
@@ -394,7 +382,7 @@ namespace SC4L3K4T
 
         private async Task RequestDisableBluetoothAsync()
         {
-#if ANDROID
+            #if ANDROID
             await MainThread.InvokeOnMainThreadAsync(() =>
             {
                 var intent = new Android.Content.Intent(
@@ -402,12 +390,12 @@ namespace SC4L3K4T
 
                 Platform.CurrentActivity?.StartActivity(intent);
             });
-#else
-    await DisplayAlertAsync(
-        "Bluetooth",
-        "Desactiva Bluetooth desde la configuración del dispositivo.",
-        "OK");
-#endif
+            #else
+            await DisplayAlertAsync(
+            "Bluetooth",
+            "Desactiva Bluetooth desde la configuración del dispositivo.",
+            "OK");
+            #endif
         }
 
         private bool _isConnected;
@@ -415,33 +403,5 @@ namespace SC4L3K4T
 
         Button? connectedButton = null;
         Button? connectedDevicePageButton = null;
-
-        //private async void OnLedButtonPressed(object sender, EventArgs e)
-        //{
-        //    if (!_isConnected || _connectedDevice is null)
-        //        return;
-
-        //    var data = System.Text.Encoding.UTF8.GetBytes("LED_ON");
-
-        //    await _bluetoothService.WriteAsync(
-        //        _connectedDevice,
-        //        BleConstants.ScaleCarServiceUuid,
-        //        BleConstants.TestCharacteristicUuid,
-        //        data);
-        //}
-
-        //private async void OnLedButtonReleased(object sender, EventArgs e)
-        //{
-        //    if (!_isConnected || _connectedDevice is null)
-        //        return;
-
-        //    var data = System.Text.Encoding.UTF8.GetBytes("LED_OFF");
-
-        //    await _bluetoothService.WriteAsync(
-        //        _connectedDevice,
-        //        BleConstants.ScaleCarServiceUuid,
-        //        BleConstants.TestCharacteristicUuid,
-        //        data);
-        //}
     }
 }

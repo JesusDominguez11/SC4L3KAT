@@ -40,9 +40,7 @@ namespace SC4L3K4T.Bluetooth
 
             _isScanning = true;
 
-            void OnDeviceDiscovered(
-        object? sender,
-        DeviceEventArgs args)
+            void OnDeviceDiscovered(object? sender, DeviceEventArgs args)
             {
                 var device = args.Device;
 
@@ -89,9 +87,7 @@ namespace SC4L3K4T.Bluetooth
             }
         }
 
-        private void OnDeviceDisconnected(
-    object? sender,
-    DeviceEventArgs e)
+        private void OnDeviceDisconnected(object? sender, DeviceEventArgs e)
         {
             var deviceInfo = new BleDeviceInfo
             {
@@ -101,9 +97,7 @@ namespace SC4L3K4T.Bluetooth
             NotifyDeviceDisconnected(deviceInfo);
         }
 
-        private void OnBluetoothStateChanged(
-            object? sender,
-            BluetoothStateChangedArgs e)
+        private void OnBluetoothStateChanged(object? sender, BluetoothStateChangedArgs e)
         {
             if (e.NewState != BluetoothState.On)
             {
@@ -142,10 +136,7 @@ namespace SC4L3K4T.Bluetooth
             _connectedDevice = deviceInfo;
         }
 
-        public async Task<byte[]> ReadAsync(
-            BleDeviceInfo deviceInfo,
-            Guid serviceUuid,
-            Guid characteristicUuid)
+        public async Task<byte[]> ReadAsync(BleDeviceInfo deviceInfo, Guid serviceUuid, Guid characteristicUuid)
         {
             var service = await deviceInfo.Device.GetServiceAsync(serviceUuid);
 
@@ -170,11 +161,7 @@ namespace SC4L3K4T.Bluetooth
             return data;
         }
 
-        public async Task WriteAsync(
-            BleDeviceInfo deviceInfo,
-            Guid serviceUuid,
-            Guid characteristicUuid,
-            byte[] data)
+        public async Task WriteAsync(BleDeviceInfo deviceInfo, Guid serviceUuid, Guid characteristicUuid, byte[] data)
         {
             var service = await deviceInfo.Device.GetServiceAsync(serviceUuid);
 
@@ -245,10 +232,7 @@ namespace SC4L3K4T.Bluetooth
             await characteristic.StartUpdatesAsync();
         }
 
-        public async Task StopNotificationsAsync(
-            BleDeviceInfo deviceInfo,
-            Guid serviceUuid,
-            Guid characteristicUuid)
+        public async Task StopNotificationsAsync(BleDeviceInfo deviceInfo, Guid serviceUuid, Guid characteristicUuid)
         {
             var service = await deviceInfo.Device.GetServiceAsync(serviceUuid);
 

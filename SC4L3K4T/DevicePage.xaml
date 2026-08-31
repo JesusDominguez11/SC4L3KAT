@@ -8,7 +8,7 @@
         <VerticalStackLayout
             Padding="30"
             Spacing="20">
-
+            
             <Label
                 x:Name="DeviceNameLabel"
                 Text="SC4L3K4T"
@@ -20,7 +20,6 @@
                 x:Name="DeviceIdLabel"
                 FontSize="13"
                 HorizontalOptions="Center" />
-            
 
             <Label
                 Text="Controles"
@@ -28,16 +27,16 @@
                 FontAttributes="Bold" />
 
             <Label
-    x:Name="DeviceStatusLabel"
-    Text="Estado: Conectando..."
-    FontSize="18"
-    HorizontalOptions="Center" />
+                x:Name="DeviceStatusLabel"
+                Text="Estado: Conectando..."
+                FontSize="18"
+                HorizontalOptions="Center" />
 
             <Label
-    x:Name="LedStatusLabel"
-    Text="LED: Desconocido"
-    FontSize="18"
-    HorizontalOptions="Center" />
+                x:Name="LedStatusLabel"
+                Text="LED: Desconocido"
+                FontSize="18"
+                HorizontalOptions="Center" />
 
             <Button
                 x:Name="LedButton"
@@ -46,37 +45,38 @@
                 Released="OnLedButtonReleased" />
 
             <Button
-    x:Name="HeadlightsButton"
-    Text="Luces: Apagadas"
-    IsEnabled="False"
-    Clicked="OnHeadlightsButtonClicked" />
-
-                <Button
-x:Name="LeftSignalButton"
-Text="Direccional izquierda: Apagada"
-IsEnabled="False"
-Clicked="OnLeftSignalButtonClicked" />
+                x:Name="HeadlightsButton"
+                Text="Luces: Apagadas"
+                IsEnabled="False"
+                Clicked="OnHeadlightsButtonClicked" />
 
             <Button
-x:Name="RightSignalButton"
-Text="Direccional derecha: Apagada"
-IsEnabled="False"
-Clicked="OnRightSignalButtonClicked" />
+                x:Name="LeftSignalButton"
+                Text="Direccional izquierda: Apagada"
+                IsEnabled="False"
+                Clicked="OnLeftSignalButtonClicked" />
 
             <Button
-    x:Name="HazardsButton"
-    Text="Intermitentes: Apagadas"
-    IsEnabled="False"
-    Clicked="OnHazardsButtonClicked" />
+                x:Name="RightSignalButton"
+                Text="Direccional derecha: Apagada"
+                IsEnabled="False"
+                Clicked="OnRightSignalButtonClicked" />
 
             <Button
-    x:Name="BrakeButton"
-    Text="Mantener para frenar"
-    IsEnabled="False"
-    Pressed="OnBrakeButtonPressed"
-    Released="OnBrakeButtonReleased" />
+                x:Name="HazardsButton"
+                Text="Intermitentes: Apagadas"
+                IsEnabled="False"
+                Clicked="OnHazardsButtonClicked" />
 
+            <Button
+                x:Name="BrakeButton"
+                Text="Mantener para frenar"
+                IsEnabled="False"
+                Pressed="OnBrakeButtonPressed"
+                Released="OnBrakeButtonReleased" />
+            
         </VerticalStackLayout>
 
     </ScrollView>
+    
 </ContentPage>
