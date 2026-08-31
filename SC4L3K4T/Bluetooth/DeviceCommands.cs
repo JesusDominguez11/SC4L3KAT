@@ -12,5 +12,11 @@ namespace SC4L3K4T.Bluetooth
 
         public const string HeadlightsOn = "HEADLIGHTS_ON";
         public const string HeadlightsOff = "HEADLIGHTS_OFF";
+
+        public const string LeftSignalOn = "LEFT_SIGNAL_ON";
+        public const string LeftSignalOff = "LEFT_SIGNAL_OFF";
+
+        public const string RightSignalOn = "RIGHT_SIGNAL_ON";
+        public const string RightSignalOff = "RIGHT_SIGNAL_OFF";
     }
 }

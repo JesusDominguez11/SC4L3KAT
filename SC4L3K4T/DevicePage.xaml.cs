@@ -61,6 +61,37 @@ public partial class DevicePage : ContentPage
             HeadlightsButton.Text =
                 "Luces: Desconocidas";
         }
+
+        LeftSignalButton.IsEnabled = _deviceControl.IsDeviceConnected;
+
+        if (_deviceControl.IsLeftSignalOn.HasValue)
+        {
+            LeftSignalButton.Text =
+                _deviceControl.IsLeftSignalOn.Value
+                    ? "Direccional izquierda: Encendida"
+                    : "Direccional izquierda: Apagada";
+        }
+        else
+        {
+            LeftSignalButton.Text =
+                "Direccional izquierda: Desconocida";
+        }
+
+        RightSignalButton.IsEnabled =
+    _deviceControl.IsDeviceConnected;
+
+        if (_deviceControl.IsRightSignalOn.HasValue)
+        {
+            RightSignalButton.Text =
+                _deviceControl.IsRightSignalOn.Value
+                    ? "Direccional derecha: Encendida"
+                    : "Direccional derecha: Apagada";
+        }
+        else
+        {
+            RightSignalButton.Text =
+                "Direccional derecha: Desconocida";
+        }
     }
 
     protected override async void OnAppearing()
@@ -130,6 +161,52 @@ public partial class DevicePage : ContentPage
         }
     }
 
+    private async void OnLeftSignalButtonClicked(
+    object sender,
+    EventArgs e)
+    {
+        if (!_deviceControl.IsDeviceConnected)
+            return;
+
+        try
+        {
+            var newState =
+                !_deviceControl.IsLeftSignalOn.GetValueOrDefault();
+
+            await _deviceControl.SetLeftSignalAsync(newState);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
+    private async void OnRightSignalButtonClicked(
+    object sender,
+    EventArgs e)
+    {
+        if (!_deviceControl.IsDeviceConnected)
+            return;
+
+        try
+        {
+            var newState =
+                !_deviceControl.IsRightSignalOn.GetValueOrDefault();
+
+            await _deviceControl.SetRightSignalAsync(newState);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
     private void OnDeviceMessageReceived(
     object? sender,
     string message)
@@ -152,6 +229,16 @@ public partial class DevicePage : ContentPage
                     LedButton.IsEnabled = false;
                     HeadlightsButton.IsEnabled = false;
 
+                    LeftSignalButton.Text =
+                        "Direccional izquierda: Desconocida";
+
+                    LeftSignalButton.IsEnabled = false;
+
+                    RightSignalButton.Text =
+    "Direccional derecha: Desconocida";
+
+                    RightSignalButton.IsEnabled = false;
+
                     break;
 
                 case "PICO_CONNECTED":
@@ -159,6 +246,8 @@ public partial class DevicePage : ContentPage
 
                     LedButton.IsEnabled = true;
                     HeadlightsButton.IsEnabled = true;
+                    LeftSignalButton.IsEnabled = true;
+                    RightSignalButton.IsEnabled = true;
                     break;
 
                 case DeviceCommands.LedOn:
@@ -180,6 +269,34 @@ public partial class DevicePage : ContentPage
 
                     HeadlightsButton.Text =
                         "Luces: Apagadas";
+
+                    break;
+
+                case DeviceCommands.LeftSignalOn:
+
+                    LeftSignalButton.Text =
+                        "Direccional izquierda: Encendida";
+
+                    break;
+
+                case DeviceCommands.LeftSignalOff:
+
+                    LeftSignalButton.Text =
+                        "Direccional izquierda: Apagada";
+
+                    break;
+
+                case DeviceCommands.RightSignalOn:
+
+                    RightSignalButton.Text =
+                        "Direccional derecha: Encendida";
+
+                    break;
+
+                case DeviceCommands.RightSignalOff:
+
+                    RightSignalButton.Text =
+                        "Direccional derecha: Apagada";
 
                     break;
             }

@@ -58,6 +58,8 @@ namespace SC4L3K4T.Bluetooth
         public bool? IsLedOn { get; private set; }
         public bool IsDeviceConnected { get; private set; }
         public bool? AreHeadlightsOn { get; private set; }
+        public bool? IsLeftSignalOn { get; private set; }
+        public bool? IsRightSignalOn { get; private set; }
 
         private void OnDataReceived(byte[] data)
         {
@@ -85,6 +87,22 @@ namespace SC4L3K4T.Bluetooth
 
                 case DeviceCommands.HeadlightsOff:
                     AreHeadlightsOn = false;
+                    break;
+
+                case DeviceCommands.LeftSignalOn:
+                    IsLeftSignalOn = true;
+                    break;
+
+                case DeviceCommands.LeftSignalOff:
+                    IsLeftSignalOn = false;
+                    break;
+
+                case DeviceCommands.RightSignalOn:
+                    IsRightSignalOn = true;
+                    break;
+
+                case DeviceCommands.RightSignalOff:
+                    IsRightSignalOn = false;
                     break;
             }
 
@@ -119,6 +137,42 @@ namespace SC4L3K4T.Bluetooth
             var command = isOn
                 ? DeviceCommands.HeadlightsOn
                 : DeviceCommands.HeadlightsOff;
+
+            var data = Encoding.UTF8.GetBytes(command);
+
+            await _bluetoothService.WriteAsync(
+                _device,
+                BleConstants.ScaleCarServiceUuid,
+                BleConstants.TestCharacteristicUuid,
+                data);
+        }
+
+        public async Task SetLeftSignalAsync(bool isOn)
+        {
+            if (!IsDeviceConnected)
+                return;
+
+            var command = isOn
+                ? DeviceCommands.LeftSignalOn
+                : DeviceCommands.LeftSignalOff;
+
+            var data = Encoding.UTF8.GetBytes(command);
+
+            await _bluetoothService.WriteAsync(
+                _device,
+                BleConstants.ScaleCarServiceUuid,
+                BleConstants.TestCharacteristicUuid,
+                data);
+        }
+
+        public async Task SetRightSignalAsync(bool isOn)
+        {
+            if (!IsDeviceConnected)
+                return;
+
+            var command = isOn
+                ? DeviceCommands.RightSignalOn
+                : DeviceCommands.RightSignalOff;
 
             var data = Encoding.UTF8.GetBytes(command);
 
