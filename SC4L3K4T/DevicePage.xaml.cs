@@ -92,6 +92,22 @@ public partial class DevicePage : ContentPage
             RightSignalButton.Text =
                 "Direccional derecha: Desconocida";
         }
+
+        HazardsButton.IsEnabled =
+    _deviceControl.IsDeviceConnected;
+
+        if (_deviceControl.AreHazardsOn.HasValue)
+        {
+            HazardsButton.Text =
+                _deviceControl.AreHazardsOn.Value
+                    ? "Intermitentes: Encendidas"
+                    : "Intermitentes: Apagadas";
+        }
+        else
+        {
+            HazardsButton.Text =
+                "Intermitentes: Desconocidas";
+        }
     }
 
     protected override async void OnAppearing()
@@ -207,6 +223,29 @@ public partial class DevicePage : ContentPage
         }
     }
 
+    private async void OnHazardsButtonClicked(
+    object sender,
+    EventArgs e)
+    {
+        if (!_deviceControl.IsDeviceConnected)
+            return;
+
+        try
+        {
+            var newState =
+                !_deviceControl.AreHazardsOn.GetValueOrDefault();
+
+            await _deviceControl.SetHazardsAsync(newState);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
     private void OnDeviceMessageReceived(
     object? sender,
     string message)
@@ -239,6 +278,11 @@ public partial class DevicePage : ContentPage
 
                     RightSignalButton.IsEnabled = false;
 
+                    HazardsButton.Text =
+    "Intermitentes: Desconocidas";
+
+                    HazardsButton.IsEnabled = false;
+
                     break;
 
                 case "PICO_CONNECTED":
@@ -248,6 +292,7 @@ public partial class DevicePage : ContentPage
                     HeadlightsButton.IsEnabled = true;
                     LeftSignalButton.IsEnabled = true;
                     RightSignalButton.IsEnabled = true;
+                    HazardsButton.IsEnabled = true;
                     break;
 
                 case DeviceCommands.LedOn:
@@ -297,6 +342,20 @@ public partial class DevicePage : ContentPage
 
                     RightSignalButton.Text =
                         "Direccional derecha: Apagada";
+
+                    break;
+
+                case DeviceCommands.HazardsOn:
+
+                    HazardsButton.Text =
+                        "Intermitentes: Encendidas";
+
+                    break;
+
+                case DeviceCommands.HazardsOff:
+
+                    HazardsButton.Text =
+                        "Intermitentes: Apagadas";
 
                     break;
             }

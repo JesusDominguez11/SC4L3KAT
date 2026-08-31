@@ -51,19 +51,23 @@
     IsEnabled="False"
     Clicked="OnHeadlightsButtonClicked" />
 
-            <HorizontalStackLayout HorizontalOptions="Center">
                 <Button
 x:Name="LeftSignalButton"
 Text="Direccional izquierda: Apagada"
 IsEnabled="False"
 Clicked="OnLeftSignalButtonClicked" />
 
-                <Button
+            <Button
 x:Name="RightSignalButton"
 Text="Direccional derecha: Apagada"
 IsEnabled="False"
 Clicked="OnRightSignalButtonClicked" />
-            </HorizontalStackLayout>
+
+            <Button
+    x:Name="HazardsButton"
+    Text="Intermitentes: Apagadas"
+    IsEnabled="False"
+    Clicked="OnHazardsButtonClicked" />
 
         </VerticalStackLayout>
 

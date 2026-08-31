@@ -18,5 +18,8 @@ namespace SC4L3K4T.Bluetooth
 
         public const string RightSignalOn = "RIGHT_SIGNAL_ON";
         public const string RightSignalOff = "RIGHT_SIGNAL_OFF";
+
+        public const string HazardsOn = "HAZARDS_ON";
+        public const string HazardsOff = "HAZARDS_OFF";
     }
 }
