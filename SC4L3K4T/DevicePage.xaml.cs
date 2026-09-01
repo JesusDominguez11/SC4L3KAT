@@ -297,6 +297,64 @@ public partial class DevicePage : ContentPage
         }
     }
 
+
+private async void OnLeftSignalTapped(
+    object sender,
+    EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetLeftSignalAsync(
+                !_deviceControl.IsLeftSignalOn ?? false);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
+
+    private async void OnRightSignalTapped(
+        object sender,
+        EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetRightSignalAsync(
+                !_deviceControl.IsRightSignalOn ?? false);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
+
+    private async void OnHazardsTapped(
+        object sender,
+        EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetHazardsAsync(
+                !_deviceControl.AreHazardsOn ?? false);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
+
     private void OnDeviceMessageReceived(
     object? sender,
     string message)

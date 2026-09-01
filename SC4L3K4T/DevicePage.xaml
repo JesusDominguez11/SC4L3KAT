@@ -4,79 +4,49 @@
              x:Class="SC4L3K4T.DevicePage"
              Title="DevicePage">
     <ScrollView>
-
-        <VerticalStackLayout
-            Padding="30"
-            Spacing="20">
-
-            <Label
-                x:Name="DeviceNameLabel"
-                Text="SC4L3K4T"
-                FontSize="32"
-                FontAttributes="Bold"
-                HorizontalOptions="Center" />
-
-            <Label
-                x:Name="DeviceIdLabel"
-                FontSize="13"
-                HorizontalOptions="Center" />
-            
-
-            <Label
-                Text="Controles"
-                FontSize="22"
-                FontAttributes="Bold" />
-
-            <Label
-    x:Name="DeviceStatusLabel"
-    Text="Estado: Conectando..."
-    FontSize="18"
-    HorizontalOptions="Center" />
-
-            <Label
-    x:Name="LedStatusLabel"
-    Text="LED: Desconocido"
-    FontSize="18"
-    HorizontalOptions="Center" />
-
-            <Button
-                x:Name="LedButton"
-                Text="Mantener para encender LED"
-                Pressed="OnLedButtonPressed"
-                Released="OnLedButtonReleased" />
-
-            <Button
-    x:Name="HeadlightsButton"
-    Text="Luces: Apagadas"
-    IsEnabled="False"
-    Clicked="OnHeadlightsButtonClicked" />
-
-                <Button
-x:Name="LeftSignalButton"
-Text="Direccional izquierda: Apagada"
-IsEnabled="False"
-Clicked="OnLeftSignalButtonClicked" />
-
-            <Button
-x:Name="RightSignalButton"
-Text="Direccional derecha: Apagada"
-IsEnabled="False"
-Clicked="OnRightSignalButtonClicked" />
-
-            <Button
-    x:Name="HazardsButton"
-    Text="Intermitentes: Apagadas"
-    IsEnabled="False"
-    Clicked="OnHazardsButtonClicked" />
-
-            <Button
-    x:Name="BrakeButton"
-    Text="Mantener para frenar"
-    IsEnabled="False"
-    Pressed="OnBrakeButtonPressed"
-    Released="OnBrakeButtonReleased" />
-
+        <VerticalStackLayout Padding="25" Spacing="25">
+            <!-- ========================= -->
+            <!-- DEVICE -->
+            <!-- ========================= -->
+            <Label x:Name="DeviceNameLabel" Text="SC4L3K4T" FontSize="32" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label x:Name="DeviceIdLabel" FontSize="13" HorizontalOptions="Center" />
+            <Label x:Name="DeviceStatusLabel" Text="Estado: Conectando..." FontSize="18" HorizontalOptions="Center" />
+            <!-- ========================= -->
+            <!-- TURN SIGNALS -->
+            <!-- ========================= -->
+            <Label Text="Direccionales" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="15" HorizontalOptions="Center" WidthRequest="300">
+                <!-- LEFT -->
+                <Button x:Name="LeftSignalButton" Grid.Column="0" Text="◀" FontSize="42" HeightRequest="90" WidthRequest="90" IsEnabled="False" Clicked="OnLeftSignalTapped" />
+                <!-- HAZARDS -->
+                <Button x:Name="HazardsButton" Grid.Column="1" Text="▲" FontSize="38" HeightRequest="90" WidthRequest="90" IsEnabled="False" Clicked="OnHazardsTapped" />
+                <!-- RIGHT -->
+                <Button x:Name="RightSignalButton" Grid.Column="2" Text="▶" FontSize="42" HeightRequest="90" WidthRequest="90" IsEnabled="False" Clicked="OnRightSignalTapped" />
+            </Grid>
+            <!-- ========================= -->
+            <!-- HEADLIGHTS -->
+            <!-- ========================= -->
+            <Label Text="Iluminación" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Button x:Name="HeadlightsButton" Text="💡 Luces" IsEnabled="False" Clicked="OnHeadlightsButtonClicked" />
+            <!-- ========================= -->
+            <!-- BRAKE -->
+            <!-- ========================= -->
+            <Label Text="Freno" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Button x:Name="BrakeButton" Text="🛑 BRAKE" FontSize="22" HeightRequest="130" WidthRequest="100" IsEnabled="False" Pressed="OnBrakeButtonPressed" Released="OnBrakeButtonReleased" />
+            <!-- ========================= -->
+            <!-- LED -->
+            <!-- ========================= -->
+            <Button x:Name="LedButton" Text="Mantener para encender LED" IsEnabled="False" Pressed="OnLedButtonPressed" Released="OnLedButtonReleased" />
+            <!-- ========================= -->
+            <!-- STATUS -->
+            <!-- ========================= -->
+            <VerticalStackLayout Spacing="5">
+                <Label x:Name="LedStatusLabel" Text="LED: Desconocido" FontSize="15" HorizontalOptions="Center" />
+                <Label x:Name="LeftSignalStatusLabel" Text="Izquierda: Desconocida" FontSize="15" HorizontalOptions="Center" />
+                <Label x:Name="RightSignalStatusLabel" Text="Derecha: Desconocida" FontSize="15" HorizontalOptions="Center" />
+                <Label x:Name="HazardsStatusLabel" Text="Hazards: Desconocidos" FontSize="15" HorizontalOptions="Center" />
+                <Label x:Name="BrakeStatusLabel" Text="Freno: Desconocido" FontSize="15" HorizontalOptions="Center" />
+            </VerticalStackLayout>
         </VerticalStackLayout>
-
     </ScrollView>
 </ContentPage>
