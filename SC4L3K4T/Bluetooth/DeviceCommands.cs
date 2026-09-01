@@ -24,5 +24,13 @@ namespace SC4L3K4T.Bluetooth
 
         public const string BrakeOn = "BRAKE_ON";
         public const string BrakeOff = "BRAKE_OFF";
+
+        public const string IgnitionStart = "IGNITION_START";
+        public const string IgnitionRelease = "IGNITION_RELEASE";
+
+        public const string EngineStarting = "ENGINE_STARTING";
+        public const string EngineRunning = "ENGINE_RUNNING";
+        public const string EngineIdle = "ENGINE_IDLE";
+        public const string EngineOff = "ENGINE_OFF";
     }
 }

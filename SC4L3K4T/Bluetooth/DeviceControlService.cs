@@ -237,6 +237,24 @@ namespace SC4L3K4T.Bluetooth
                 data);
         }
 
+        public async Task SetIgnitionAsync(bool isPressed)
+        {
+            if (!IsDeviceConnected)
+                return;
+
+            var command = isPressed
+                ? DeviceCommands.IgnitionStart
+                : DeviceCommands.IgnitionRelease;
+
+            var data = Encoding.UTF8.GetBytes(command);
+
+            await _bluetoothService.WriteAsync(
+                _device,
+                BleConstants.ScaleCarServiceUuid,
+                BleConstants.TestCharacteristicUuid,
+                data);
+        }
+
         private void OnDeviceDisconnected(
     object? sender,
     BleDeviceInfo deviceInfo)

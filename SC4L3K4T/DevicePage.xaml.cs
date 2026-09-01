@@ -354,6 +354,39 @@ private async void OnLeftSignalTapped(
         }
     }
 
+    private async void OnIgnitionButtonPressed(
+    object sender,
+    EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetIgnitionAsync(true);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
+    private async void OnIgnitionButtonReleased(
+    object sender,
+    EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetIgnitionAsync(false);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
 
     private void OnDeviceMessageReceived(
     object? sender,

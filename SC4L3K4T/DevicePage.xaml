@@ -5,6 +5,13 @@
              Title="DevicePage">
     <ScrollView>
         <VerticalStackLayout Padding="25" Spacing="25">
+
+            <Button
+    x:Name="IgnitionButton"
+    Text="Mantener para arrancar"
+    Pressed="OnIgnitionButtonPressed"
+    Released="OnIgnitionButtonReleased" />
+
             <!-- ========================= -->
             <!-- DEVICE -->
             <!-- ========================= -->
