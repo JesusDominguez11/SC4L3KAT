@@ -27,6 +27,7 @@ public partial class DevicePage : ContentPage
 
             LedButton.IsEnabled = true;
             HeadlightsButton.IsEnabled = true;
+            ThrottleButton.IsEnabled = true;
         }
         else
         {
@@ -34,6 +35,7 @@ public partial class DevicePage : ContentPage
             
             LedButton.IsEnabled = false;
             HeadlightsButton.IsEnabled = false;
+            ThrottleButton.IsEnabled = false;
         }
 
         if (_deviceControl.IsLedOn.HasValue)
@@ -388,6 +390,41 @@ private async void OnLeftSignalTapped(
         }
     }
 
+private async void OnThrottleButtonPressed(
+    object sender,
+    EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetThrottleAsync(true);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
+    private async void OnThrottleButtonReleased(
+        object sender,
+        EventArgs e)
+    {
+        try
+        {
+            await _deviceControl.SetThrottleAsync(false);
+        }
+        catch (Exception ex)
+        {
+            await DisplayAlertAsync(
+                "Error",
+                ex.Message,
+                "OK");
+        }
+    }
+
+
     private void OnDeviceMessageReceived(
     object? sender,
     string message)
@@ -430,6 +467,8 @@ private async void OnLeftSignalTapped(
                     BrakeButton.Text =
                         "Freno: Desconocido";
 
+                    ThrottleButton.IsEnabled = false;
+
                     break;
 
                 case "PICO_CONNECTED":
@@ -441,6 +480,7 @@ private async void OnLeftSignalTapped(
                     RightSignalButton.IsEnabled = true;
                     HazardsButton.IsEnabled = true;
                     BrakeButton.IsEnabled = true;
+                    ThrottleButton.IsEnabled = true;
                     break;
 
                 case DeviceCommands.LedOn:

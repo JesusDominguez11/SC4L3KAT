@@ -32,5 +32,8 @@ namespace SC4L3K4T.Bluetooth
         public const string EngineRunning = "ENGINE_RUNNING";
         public const string EngineIdle = "ENGINE_IDLE";
         public const string EngineOff = "ENGINE_OFF";
+
+        public const string ThrottleOn = "THROTTLE_ON";
+        public const string ThrottleOff = "THROTTLE_OFF";
     }
 }

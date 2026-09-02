@@ -22,6 +22,20 @@ namespace SC4L3K4T.Bluetooth
             _bluetoothService.DeviceDisconnected += OnDeviceDisconnected;
         }
 
+        private void OnDeviceDisconnected(
+    object? sender,
+    BleDeviceInfo deviceInfo)
+        {
+            if (deviceInfo.Id != _device.Id)
+                return;
+
+            IsDeviceConnected = false;
+
+            DeviceMessageReceived?.Invoke(
+                this,
+                "PICO_DISCONNECTED");
+        }
+
         public async Task StartAsync()
         {
             await _bluetoothService.StartNotificationsAsync(
@@ -255,18 +269,22 @@ namespace SC4L3K4T.Bluetooth
                 data);
         }
 
-        private void OnDeviceDisconnected(
-    object? sender,
-    BleDeviceInfo deviceInfo)
+        public async Task SetThrottleAsync(bool isPressed)
         {
-            if (deviceInfo.Id != _device.Id)
+            if (!IsDeviceConnected)
                 return;
 
-            IsDeviceConnected = false;
+            var command = isPressed
+                ? DeviceCommands.ThrottleOn
+                : DeviceCommands.ThrottleOff;
 
-            DeviceMessageReceived?.Invoke(
-                this,
-                "PICO_DISCONNECTED");
+            var data = Encoding.UTF8.GetBytes(command);
+
+            await _bluetoothService.WriteAsync(
+                _device,
+                BleConstants.ScaleCarServiceUuid,
+                BleConstants.TestCharacteristicUuid,
+                data);
         }
     }
 }

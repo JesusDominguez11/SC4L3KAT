@@ -40,6 +40,26 @@
             <!-- ========================= -->
             <Label Text="Freno" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" />
             <Button x:Name="BrakeButton" Text="🛑 BRAKE" FontSize="22" HeightRequest="130" WidthRequest="100" IsEnabled="False" Pressed="OnBrakeButtonPressed" Released="OnBrakeButtonReleased" />
+
+            <!-- ========================= -->
+            <!-- ACCELERATOR -->
+            <!-- ========================= -->
+            <Label
+    Text="Motor"
+    FontSize="22"
+    FontAttributes="Bold"
+    HorizontalOptions="Center" />
+
+            <Button
+    x:Name="ThrottleButton"
+    Text="Mantener para acelerar"
+    FontSize="22"
+    HeightRequest="130"
+    IsEnabled="False"
+    Pressed="OnThrottleButtonPressed"
+    Released="OnThrottleButtonReleased" />
+
+
             <!-- ========================= -->
             <!-- LED -->
             <!-- ========================= -->
